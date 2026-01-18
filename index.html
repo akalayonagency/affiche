@@ -19,16 +19,9 @@
       /* Police (modifiable) */
       --poster-font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 
-      /* ===== Couleurs / effets ===== */
-      --match-mode: solid;     /* solid | gradient */
-      --match-color: #ffffff;  /* solid */
-      --match-g1: #f7e08c;     /* gradient start */
-      --match-g2: #b6891e;     /* gradient end */
-
-      --boost-color: #ffffff;  /* boost text color */
-      --boost-mode: solid;     /* solid | gradient */
-      --boost-g1: #9be8ff;
-      --boost-g2: #2a74ff;
+      /* Etats UI */
+      --match-mode: gradient; /* solid | gradient */
+      --boost-mode: solid;    /* solid | gradient */
     }
 
     /* Page TRANSPARENTE (pour embed Odoo) */
@@ -123,6 +116,7 @@
 
     button.secondary{
       background: rgba(0,0,0,.28);
+      color:#fff;
     }
 
     /* Preview */
@@ -169,6 +163,7 @@
       pointer-events:none;
     }
 
+    /* Header */
     .topStack{
       position:absolute;
       left:18px;
@@ -182,8 +177,10 @@
       pointer-events:none;
     }
 
-    /* ===== MATCH OFF (avec mode solid / gradient) ===== */
+    /* Pills */
     .matchOff{
+      width:100%;
+      max-width:100%;
       font-weight:1000;
       font-size:26px;
       letter-spacing:2px;
@@ -198,32 +195,17 @@
         0 2px 0 rgba(0,0,0,.35),
         0 0 18px rgba(255,255,255,.18);
       backdrop-filter: blur(2px);
-      max-width:100%;
       overflow:hidden;
-      text-overflow:ellipsis;
       white-space:nowrap;
-
-      color: var(--match-color);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:56px;
     }
 
-    /* Mode dégradé pour MATCH OFF */
-    .matchOff.isGradient{
-      color: transparent;
-      background-image:
-        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06)),
-        linear-gradient(90deg, var(--match-g1), var(--match-g2));
-      background-blend-mode: normal;
-      -webkit-background-clip: text;
-      background-clip: text;
-      /* un petit glow sympa */
-      text-shadow:
-        0 2px 0 rgba(0,0,0,.35),
-        0 0 18px rgba(255,255,255,.10),
-        0 0 24px rgba(0,0,0,.25);
-    }
-
-    /* ===== BOOST (avec mode solid / gradient) ===== */
     .boostLine{
+      width:100%;
+      max-width:100%;
       font-weight:1000;
       font-size:14px;
       letter-spacing:2px;
@@ -234,25 +216,41 @@
       border: 1px solid rgba(255,255,255,.16);
       box-shadow: 0 10px 24px rgba(0,0,0,.35);
       text-shadow: 0 2px 10px rgba(0,0,0,.55);
-      max-width:100%;
       overflow:hidden;
-      text-overflow:ellipsis;
       white-space:nowrap;
-
-      color: var(--boost-color);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:40px;
     }
 
-    .boostLine.isGradient{
-      color: transparent;
-      background-image:
-        linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
-        linear-gradient(90deg, var(--boost-g1), var(--boost-g2));
-      background-blend-mode: normal;
-      -webkit-background-clip: text;
-      background-clip: text;
-      text-shadow:
-        0 2px 10px rgba(0,0,0,.65),
-        0 0 18px rgba(255,255,255,.10);
+    /* SVG texte (dégradé exportable partout) */
+    .gradTextSvg{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+
+    /* Match text */
+    #matchText{
+      font-family: var(--poster-font);
+      font-weight:1000;
+      letter-spacing: 12px; /* dans le viewBox */
+      text-transform: uppercase;
+      paint-order: stroke;
+      stroke: rgba(0,0,0,.35);
+      stroke-width: 12px;
+    }
+
+    /* Boost text */
+    #boostText{
+      font-family: var(--poster-font);
+      font-weight:1000;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+      paint-order: stroke;
+      stroke: rgba(0,0,0,.35);
+      stroke-width: 10px;
     }
 
     .datePill{
@@ -271,6 +269,7 @@
       white-space:nowrap;
     }
 
+    /* Creators */
     .creatorsLayer{
       position:absolute;
       left:0;
@@ -294,7 +293,7 @@
     }
 
     .creator.left{  transform: translateY(110px); }
-    .creator.right{ transform: translateY(-55px); }
+    .creator.right{ transform: translateY(-75px); }
 
     .handle{
       padding:8px 12px;
@@ -338,6 +337,7 @@
       display:block;
     }
 
+    /* Logo */
     .agencyBadge{
       position:absolute;
       right: 34px;
@@ -400,12 +400,7 @@
       opacity:.9;
     }
 
-    .chatgptBtn:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 18px 38px rgba(0,0,0,.45);
-    }
-
-    /* ===== BOUTONS DORÉS ===== */
+    /* BOUTONS DORÉS */
     button:not(.secondary),
     .chatgptBtn{
       background:
@@ -445,11 +440,6 @@
     .chatgptBtn span{
       color:#3a2b00;
       opacity:.85;
-    }
-
-    button.secondary{
-      background: rgba(0,0,0,.28);
-      color:#fff;
     }
 
     /* Toggle boost: état ON */
@@ -510,7 +500,7 @@
       <input id="date" type="text" placeholder="Date & heure" value="Date & heure" />
     </div>
 
-    <!-- ===== Choix police ===== -->
+    <!-- Police -->
     <div class="field" style="margin-top:12px;">
       <label>Police d’écriture</label>
       <select id="fontSelect">
@@ -524,32 +514,32 @@
       </select>
     </div>
 
-    <!-- ===== MATCH OFF : couleur / dégradé ===== -->
+    <!-- MATCH OFF style -->
     <div class="field" style="margin-top:12px;">
       <label>Style "MATCH OFF"</label>
       <select id="matchMode">
-        <option value="solid" selected>Couleur unie</option>
-        <option value="gradient">Dégradé</option>
+        <option value="solid">Couleur unie</option>
+        <option value="gradient" selected>Dégradé</option>
       </select>
     </div>
 
     <div class="row" style="margin-top:0;">
       <div class="field" id="matchSolidWrap">
-        <label>Couleur texte MATCH OFF</label>
+        <label>Couleur unie MATCH OFF</label>
         <input id="matchColor" type="color" value="#ffffff" />
       </div>
-      <div class="field" id="matchG2Wrap" style="display:none;">
+      <div class="field" id="matchG2Wrap">
         <label>Dégradé MATCH OFF (fin)</label>
         <input id="matchG2" type="color" value="#b6891e" />
       </div>
     </div>
 
-    <div class="field" id="matchG1Wrap" style="display:none; margin-top:-6px;">
+    <div class="field" id="matchG1Wrap" style="margin-top:-6px;">
       <label>Dégradé MATCH OFF (début)</label>
       <input id="matchG1" type="color" value="#f7e08c" />
     </div>
 
-    <!-- ===== BOOST : couleur / dégradé ===== -->
+    <!-- BOOST style -->
     <div class="field" style="margin-top:12px;">
       <label>Style "BOOST"</label>
       <select id="boostMode">
@@ -560,7 +550,7 @@
 
     <div class="row" style="margin-top:0;">
       <div class="field" id="boostSolidWrap">
-        <label>Couleur texte BOOST</label>
+        <label>Couleur unie BOOST</label>
         <input id="boostColor" type="color" value="#ffffff" />
       </div>
       <div class="field" id="boostG2Wrap" style="display:none;">
@@ -603,8 +593,38 @@
       <div class="fightVignette"></div>
 
       <div class="topStack">
-        <div class="matchOff" id="matchOffPreview">MATCH OFF</div>
-        <div class="boostLine" id="boostPreview">SANS BOOST</div>
+        <!-- MATCH OFF (SVG gradient export-safe) -->
+        <div class="matchOff" id="matchOffPreview">
+          <svg class="gradTextSvg" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="matchGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop id="matchStop1" offset="0%" stop-color="#f7e08c"></stop>
+                <stop id="matchStop2" offset="100%" stop-color="#b6891e"></stop>
+              </linearGradient>
+            </defs>
+            <text id="matchText" x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-size="78"
+                  fill="url(#matchGrad)">
+              MATCH OFF
+            </text>
+          </svg>
+        </div>
+
+        <!-- BOOST (SVG gradient export-safe) -->
+        <div class="boostLine" id="boostPreview">
+          <svg class="gradTextSvg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="boostGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop id="boostStop1" offset="0%" stop-color="#9be8ff"></stop>
+                <stop id="boostStop2" offset="100%" stop-color="#2a74ff"></stop>
+              </linearGradient>
+            </defs>
+            <text id="boostText" x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-size="56"
+                  fill="url(#boostGrad)">
+              SANS BOOST
+            </text>
+          </svg>
+        </div>
+
         <div class="datePill" id="datePreview">Date & heure</div>
       </div>
 
@@ -632,7 +652,7 @@
     </div>
   </div>
 
-  <!-- html2canvas (export identique au rendu) -->
+  <!-- html2canvas -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <script>
@@ -655,18 +675,26 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // ===== BOOST toggle =====
+    // SVG refs
+    const matchText = document.getElementById('matchText');
+    const boostText = document.getElementById('boostText');
+
+    const matchStop1 = document.getElementById('matchStop1');
+    const matchStop2 = document.getElementById('matchStop2');
+    const boostStop1 = document.getElementById('boostStop1');
+    const boostStop2 = document.getElementById('boostStop2');
+
+    // BOOST toggle
     const boostBtn = document.getElementById('boostBtn');
-    const boostPreview = document.getElementById('boostPreview');
     let boostOn = false;
 
     function refreshBoostText(){
-      boostPreview.textContent = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
-      if (boostBtn) {
-        boostBtn.textContent = boostOn ? 'AVEC BOOST : ON' : 'SANS BOOST : OFF';
-        boostBtn.classList.toggle('isOn', boostOn);
-        boostBtn.setAttribute('aria-pressed', String(boostOn));
-      }
+      const label = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
+      boostText.textContent = label;
+
+      boostBtn.textContent = boostOn ? 'AVEC BOOST : ON' : 'SANS BOOST : OFF';
+      boostBtn.classList.toggle('isOn', boostOn);
+      boostBtn.setAttribute('aria-pressed', String(boostOn));
     }
 
     boostBtn.addEventListener('click', () => {
@@ -675,9 +703,7 @@
       saveAll();
     });
 
-    refreshBoostText();
-
-    // ===== POLICE =====
+    // Font
     const fontSelect = document.getElementById('fontSelect');
 
     function ensureGoogleFontLoaded(googleValue){
@@ -701,9 +727,7 @@
       document.documentElement.style.setProperty('--poster-font', fontStack);
     }
 
-    // ===== Couleurs / Dégradés =====
-    const matchOffPreview = document.getElementById('matchOffPreview');
-
+    // Styles MATCH/BOOST
     const matchMode = document.getElementById('matchMode');
     const matchColor = document.getElementById('matchColor');
     const matchG1 = document.getElementById('matchG1');
@@ -722,37 +746,49 @@
     const boostG1Wrap = document.getElementById('boostG1Wrap');
     const boostG2Wrap = document.getElementById('boostG2Wrap');
 
+    function applyMatchStops(){
+      // mode solid => stops identiques (donc "dégradé" = couleur unie)
+      if (matchMode.value === 'solid') {
+        matchStop1.setAttribute('stop-color', matchColor.value);
+        matchStop2.setAttribute('stop-color', matchColor.value);
+      } else {
+        matchStop1.setAttribute('stop-color', matchG1.value);
+        matchStop2.setAttribute('stop-color', matchG2.value);
+      }
+    }
+
+    function applyBoostStops(){
+      if (boostMode.value === 'solid') {
+        boostStop1.setAttribute('stop-color', boostColor.value);
+        boostStop2.setAttribute('stop-color', boostColor.value);
+      } else {
+        boostStop1.setAttribute('stop-color', boostG1.value);
+        boostStop2.setAttribute('stop-color', boostG2.value);
+      }
+    }
+
     function toggleModeUI(){
       const mm = matchMode.value;
-      matchOffPreview.classList.toggle('isGradient', mm === 'gradient');
       matchSolidWrap.style.display = (mm === 'solid') ? 'flex' : 'none';
       matchG1Wrap.style.display = (mm === 'gradient') ? 'flex' : 'none';
       matchG2Wrap.style.display = (mm === 'gradient') ? 'flex' : 'none';
 
       const bm = boostMode.value;
-      boostPreview.classList.toggle('isGradient', bm === 'gradient');
       boostSolidWrap.style.display = (bm === 'solid') ? 'flex' : 'none';
       boostG1Wrap.style.display = (bm === 'gradient') ? 'flex' : 'none';
       boostG2Wrap.style.display = (bm === 'gradient') ? 'flex' : 'none';
+
+      document.documentElement.style.setProperty('--match-mode', mm);
+      document.documentElement.style.setProperty('--boost-mode', bm);
     }
 
-    function applyColors(){
-      // MATCH OFF
-      document.documentElement.style.setProperty('--match-mode', matchMode.value);
-      document.documentElement.style.setProperty('--match-color', matchColor.value);
-      document.documentElement.style.setProperty('--match-g1', matchG1.value);
-      document.documentElement.style.setProperty('--match-g2', matchG2.value);
-
-      // BOOST
-      document.documentElement.style.setProperty('--boost-mode', boostMode.value);
-      document.documentElement.style.setProperty('--boost-color', boostColor.value);
-      document.documentElement.style.setProperty('--boost-g1', boostG1.value);
-      document.documentElement.style.setProperty('--boost-g2', boostG2.value);
-
+    function applyAllStyles(){
       toggleModeUI();
+      applyMatchStops();
+      applyBoostStops();
     }
 
-    // ===== Texte handles/date =====
+    // Text fields
     function fileToDataURL(file){
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -779,15 +815,12 @@
       saveAll();
     }));
 
-    refreshText();
-
     bgInput.addEventListener('change', async (e) => {
       const f = e.target.files && e.target.files[0];
       if (!f) return;
       const url = await fileToDataURL(f);
       bgDiv.style.backgroundImage = `url("${url}")`;
       bgDiv.dataset.src = url;
-      // pas de save local pour images (souvent lourd)
     });
 
     a1Input.addEventListener('change', async (e) => {
@@ -821,10 +854,8 @@
     async function exportPNG(){
       const phoneEl = document.getElementById("phone");
 
-      if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
-      }
-
+      // Fonts + images
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
       await waitForImages(phoneEl);
 
       const rect = phoneEl.getBoundingClientRect();
@@ -856,7 +887,7 @@
       });
     });
 
-    // ===== Save / Restore (localStorage) =====
+    // Save / Restore
     function saveAll(){
       try{
         const opt = fontSelect.options[fontSelect.selectedIndex];
@@ -899,7 +930,7 @@
           applyFontFromSelect();
         }
 
-        // Match / Boost styles
+        // Modes + couleurs
         const mm = localStorage.getItem('matchMode'); if (mm) matchMode.value = mm;
         const mc = localStorage.getItem('matchColor'); if (mc) matchColor.value = mc;
         const mg1 = localStorage.getItem('matchG1'); if (mg1) matchG1.value = mg1;
@@ -911,47 +942,46 @@
         const bg2 = localStorage.getItem('boostG2'); if (bg2) boostG2.value = bg2;
 
         boostOn = localStorage.getItem('boostOn') === '1';
-        refreshBoostText();
 
-        // Text inputs
+        // Texte
         const sh1 = localStorage.getItem('h1'); if (sh1) h1.value = sh1;
         const sh2 = localStorage.getItem('h2'); if (sh2) h2.value = sh2;
         const sd = localStorage.getItem('date'); if (sd) date.value = sd;
-        refreshText();
 
-        applyColors();
+        refreshText();
+        refreshBoostText();
+        applyAllStyles();
       }catch(e){
         applyFontFromSelect();
-        applyColors();
+        refreshText();
+        refreshBoostText();
+        applyAllStyles();
       }
     }
 
-    // Listeners styles
-    fontSelect.addEventListener('change', () => {
-      applyFontFromSelect();
-      saveAll();
-    });
+    // Listeners
+    fontSelect.addEventListener('change', () => { applyFontFromSelect(); saveAll(); });
 
-    matchMode.addEventListener('change', () => { applyColors(); saveAll(); });
-    matchColor.addEventListener('input', () => { applyColors(); saveAll(); });
-    matchG1.addEventListener('input', () => { applyColors(); saveAll(); });
-    matchG2.addEventListener('input', () => { applyColors(); saveAll(); });
+    matchMode.addEventListener('change', () => { applyAllStyles(); saveAll(); });
+    matchColor.addEventListener('input', () => { applyAllStyles(); saveAll(); });
+    matchG1.addEventListener('input', () => { applyAllStyles(); saveAll(); });
+    matchG2.addEventListener('input', () => { applyAllStyles(); saveAll(); });
 
-    boostMode.addEventListener('change', () => { applyColors(); saveAll(); });
-    boostColor.addEventListener('input', () => { applyColors(); saveAll(); });
-    boostG1.addEventListener('input', () => { applyColors(); saveAll(); });
-    boostG2.addEventListener('input', () => { applyColors(); saveAll(); });
+    boostMode.addEventListener('change', () => { applyAllStyles(); saveAll(); });
+    boostColor.addEventListener('input', () => { applyAllStyles(); saveAll(); });
+    boostG1.addEventListener('input', () => { applyAllStyles(); saveAll(); });
+    boostG2.addEventListener('input', () => { applyAllStyles(); saveAll(); });
 
     // Init
     restoreAll();
 
+    // Reset
     resetBtn.addEventListener('click', () => {
       bgDiv.style.backgroundImage = '';
       delete bgDiv.dataset.src;
 
       a1Img.src = '';
       a1Img.style.display = 'none';
-
       a2Img.src = '';
       a2Img.style.display = 'none';
 
@@ -964,16 +994,13 @@
       date.value = 'Date & Heure';
       refreshText();
 
-      // Reset boost
       boostOn = false;
       refreshBoostText();
 
-      // Reset font
       fontSelect.selectedIndex = 0;
       applyFontFromSelect();
 
-      // Reset styles MATCH / BOOST
-      matchMode.value = 'solid';
+      matchMode.value = 'gradient';
       matchColor.value = '#ffffff';
       matchG1.value = '#f7e08c';
       matchG2.value = '#b6891e';
@@ -983,28 +1010,13 @@
       boostG1.value = '#9be8ff';
       boostG2.value = '#2a74ff';
 
-      applyColors();
+      applyAllStyles();
 
-      // Clear storage
       try{
-        localStorage.removeItem('posterFont');
-        localStorage.removeItem('posterFontGoogle');
-        localStorage.removeItem('matchMode');
-        localStorage.removeItem('matchColor');
-        localStorage.removeItem('matchG1');
-        localStorage.removeItem('matchG2');
-        localStorage.removeItem('boostMode');
-        localStorage.removeItem('boostColor');
-        localStorage.removeItem('boostG1');
-        localStorage.removeItem('boostG2');
-        localStorage.removeItem('boostOn');
-        localStorage.removeItem('h1');
-        localStorage.removeItem('h2');
-        localStorage.removeItem('date');
+        localStorage.clear();
       }catch(e){}
     });
   </script>
 </body>
 </html>
-
 
