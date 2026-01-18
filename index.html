@@ -157,11 +157,11 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:-100px;
+      gap:8px; /* plus serré */
       pointer-events:none;
     }
 
-    /* ✅ SUPPRIME LES RECTANGLES : plus de background/border/shadow */
+    /* ✅ Pas de rectangles derrière (transparent) */
     .matchOff,
     .boostLine{
       width:100%;
@@ -175,9 +175,8 @@
       border-radius: 0;
     }
 
-    /* Hauteurs pour garder les mêmes espacements */
     .matchOff{ height:56px; }
-    .boostLine{ height:40px; }
+    .boostLine{ height:38px; }
 
     .gradTextSvg{
       width:100%;
@@ -185,31 +184,12 @@
       display:block;
     }
 
-    #matchText{
-      font-family: var(--poster-font);
-      font-weight:1000;
-      letter-spacing: 12px;
-      text-transform: uppercase;
-      paint-order: stroke;
-      stroke: rgba(0,0,0,.35);
-      stroke-width: 12px;
-    }
-
-    #boostText{
-      font-family: var(--poster-font);
-      font-weight:1000;
-      letter-spacing: 10px;
-      text-transform: uppercase;
-      paint-order: stroke;
-      stroke: rgba(0,0,0,.35);
-      stroke-width: 10px;
-    }
-
+    /* Date */
     .datePill{
       font-weight:900;
       font-size:16px;
       letter-spacing:.4px;
-      padding:1px 4px;
+      padding:8px 12px; /* un peu moins haut */
       border-radius:14px;
       background: rgba(0,0,0,.55);
       border: 1px solid rgba(255,255,255,.16);
@@ -221,6 +201,7 @@
       white-space:nowrap;
     }
 
+    /* Creators */
     .creatorsLayer{
       position:absolute;
       left:0;
@@ -330,19 +311,12 @@
       text-decoration:none;
       font-weight:900;
       letter-spacing:.2px;
-      color:#fff;
       border:1px solid rgba(255,255,255,.25);
       box-shadow: 0 14px 30px rgba(0,0,0,.35);
       backdrop-filter: blur(2px);
       font-family: var(--poster-font);
       background:
-        linear-gradient(
-          180deg,
-          #f7e08c 0%,
-          #e6c45a 35%,
-          #cfa233 65%,
-          #b6891e 100%
-        );
+        linear-gradient(180deg,#f7e08c 0%,#e6c45a 35%,#cfa233 65%,#b6891e 100%);
       color:#1a1400;
     }
 
@@ -357,39 +331,22 @@
 
     button:not(.secondary){
       background:
-        linear-gradient(
-          180deg,
-          #f7e08c 0%,
-          #e6c45a 35%,
-          #cfa233 65%,
-          #b6891e 100%
-        );
+        linear-gradient(180deg,#f7e08c 0%,#e6c45a 35%,#cfa233 65%,#b6891e 100%);
       color:#1a1400;
       font-weight:1000;
       letter-spacing:.3px;
       border:1px solid rgba(255,255,255,.45);
-      box-shadow:
-        0 10px 24px rgba(0,0,0,.45),
-        inset 0 1px 0 rgba(255,255,255,.65);
-      text-shadow:
-        0 1px 0 rgba(255,255,255,.4);
+      box-shadow: 0 10px 24px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.65);
+      text-shadow: 0 1px 0 rgba(255,255,255,.4);
     }
 
     button.boostToggle.isOn{
       background:
-        linear-gradient(
-          180deg,
-          #f7e08c 0%,
-          #e6c45a 35%,
-          #cfa233 65%,
-          #b6891e 100%
-        );
+        linear-gradient(180deg,#f7e08c 0%,#e6c45a 35%,#cfa233 65%,#b6891e 100%);
       color:#1a1400;
       font-weight:1000;
       border:1px solid rgba(255,255,255,.45);
-      box-shadow:
-        0 10px 24px rgba(0,0,0,.45),
-        inset 0 1px 0 rgba(255,255,255,.65);
+      box-shadow: 0 10px 24px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.65);
       text-shadow: 0 1px 0 rgba(255,255,255,.4);
     }
   </style>
@@ -513,6 +470,7 @@
       <div class="fightVignette"></div>
 
       <div class="topStack">
+        <!-- MATCH OFF : 2 couches (sous-couche légère + dégradé) -->
         <div class="matchOff" id="matchOffPreview">
           <svg class="gradTextSvg" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <defs>
@@ -521,11 +479,32 @@
                 <stop id="matchStop2" offset="100%" stop-color="#b6891e"></stop>
               </linearGradient>
             </defs>
-            <text id="matchText" x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-size="78"
-                  fill="url(#matchGrad)">MATCH OFF</text>
+
+            <!-- Sous-couche (fine, pas trop grosse) -->
+            <text id="matchTextBase"
+                  x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
+                  font-size="78"
+                  fill="rgba(0,0,0,0.28)"
+                  stroke="rgba(0,0,0,0.42)" stroke-width="8"
+                  stroke-linejoin="round"
+                  paint-order="stroke fill">
+              MATCH OFF
+            </text>
+
+            <!-- Dégradé au dessus -->
+            <text id="matchText"
+                  x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
+                  font-size="78"
+                  fill="url(#matchGrad)"
+                  stroke="rgba(0,0,0,0.35)" stroke-width="6"
+                  stroke-linejoin="round"
+                  paint-order="stroke fill">
+              MATCH OFF
+            </text>
           </svg>
         </div>
 
+        <!-- BOOST : 2 couches (léger) -->
         <div class="boostLine" id="boostPreview">
           <svg class="gradTextSvg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <defs>
@@ -534,8 +513,26 @@
                 <stop id="boostStop2" offset="100%" stop-color="#2a74ff"></stop>
               </linearGradient>
             </defs>
-            <text id="boostText" x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-size="56"
-                  fill="url(#boostGrad)">SANS BOOST</text>
+
+            <text id="boostTextBase"
+                  x="50%" y="58%" dominant-baseline="middle" text-anchor="middle"
+                  font-size="56"
+                  fill="rgba(0,0,0,0.28)"
+                  stroke="rgba(0,0,0,0.42)" stroke-width="7"
+                  stroke-linejoin="round"
+                  paint-order="stroke fill">
+              SANS BOOST
+            </text>
+
+            <text id="boostText"
+                  x="50%" y="58%" dominant-baseline="middle" text-anchor="middle"
+                  font-size="56"
+                  fill="url(#boostGrad)"
+                  stroke="rgba(0,0,0,0.35)" stroke-width="5"
+                  stroke-linejoin="round"
+                  paint-order="stroke fill">
+              SANS BOOST
+            </text>
           </svg>
         </div>
 
@@ -589,7 +586,9 @@
     const resetBtn = document.getElementById('resetBtn');
 
     const matchText = document.getElementById('matchText');
+    const matchTextBase = document.getElementById('matchTextBase');
     const boostText = document.getElementById('boostText');
+    const boostTextBase = document.getElementById('boostTextBase');
 
     const matchStop1 = document.getElementById('matchStop1');
     const matchStop2 = document.getElementById('matchStop2');
@@ -602,6 +601,8 @@
     function refreshBoostText(){
       const label = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
       boostText.textContent = label;
+      boostTextBase.textContent = label;
+
       boostBtn.textContent = boostOn ? 'AVEC BOOST : ON' : 'SANS BOOST : OFF';
       boostBtn.classList.toggle('isOn', boostOn);
       boostBtn.setAttribute('aria-pressed', String(boostOn));
@@ -870,6 +871,9 @@
     boostG2.addEventListener('input', () => { applyAllStyles(); saveAll(); });
 
     restoreAll();
+    refreshText();
+    refreshBoostText();
+    applyAllStyles();
 
     resetBtn.addEventListener('click', () => {
       bgDiv.style.backgroundImage = '';
