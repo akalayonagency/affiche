@@ -9,11 +9,17 @@
       --phone-w: 360px;
       --phone-h: 640px;
     }
-    body{
+
+    /* ✅ Page TRANSPARENTE (pour embed sur Odoo) */
+    html, body{
       margin:0;
+      padding:0;
+      background: transparent;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      background:#0f1115;
-      color:#e8e8e8;
+      color:#fff;
+    }
+
+    body{
       display:flex;
       gap:24px;
       padding:24px;
@@ -21,76 +27,87 @@
       align-items:flex-start;
       justify-content:center;
     }
+
+    /* ✅ Panneau gauche TRANSPARENT */
     .panel{
       width:min(520px, 95vw);
-      background:#151925;
-      border:1px solid rgba(255,255,255,.08);
+      background: transparent; /* <- transparent */
+      border:1px solid rgba(255,255,255,.18);
       border-radius:16px;
       padding:16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+      box-shadow: none; /* <- transparent */
+      backdrop-filter: blur(0px);
     }
+
     .panel h1{
       font-size:18px;
       margin:0 0 12px;
-      font-weight:700;
+      font-weight:800;
+      text-shadow: 0 2px 14px rgba(0,0,0,.35);
     }
+
     .row{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:12px;
       margin-bottom:12px;
     }
+
     .field{
       display:flex;
       flex-direction:column;
       gap:6px;
     }
+
     label{
       font-size:12px;
-      opacity:.9;
+      opacity:.95;
+      text-shadow: 0 2px 10px rgba(0,0,0,.35);
     }
+
     input[type="text"], input[type="file"]{
       width:100%;
       box-sizing:border-box;
       padding:10px 10px;
       border-radius:10px;
-      border:1px solid rgba(255,255,255,.12);
-      background:#0f1320;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.28); /* lisible sur fond transparent */
       color:#fff;
       outline:none;
     }
+
     input[type="file"]{
       padding:8px;
     }
+
     .btns{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       margin-top:10px;
     }
+
     button{
       cursor:pointer;
       padding:10px 12px;
       border-radius:12px;
-      border:1px solid rgba(255,255,255,.14);
-      background:#1f6feb;
+      border:1px solid rgba(255,255,255,.20);
+      background: rgba(31,111,235,.92);
       color:white;
-      font-weight:700;
-    }
-    button.secondary{
-      background:#20263a;
-    }
-    button:disabled{
-      opacity:.5;
-      cursor:not-allowed;
+      font-weight:800;
     }
 
-    /* Preview "téléphone" */
+    button.secondary{
+      background: rgba(0,0,0,.28);
+    }
+
+    /* PREVIEW */
     .previewWrap{
       width: min(420px, 95vw);
       display:flex;
       justify-content:center;
     }
+
     .phone{
       width: var(--phone-w);
       height: var(--phone-h);
@@ -99,9 +116,10 @@
       position:relative;
       overflow:hidden;
       box-shadow: 0 18px 60px rgba(0,0,0,.55);
-      border: 10px solid rgba(255,255,255,.06);
+      border: 10px solid rgba(255,255,255,.08);
       transform: translateZ(0);
     }
+
     .bg{
       position:absolute;
       inset:0;
@@ -109,6 +127,7 @@
       background-size:cover;
       background-position:center;
     }
+
     .topBar{
       position:absolute;
       left:18px;
@@ -117,13 +136,15 @@
       display:flex;
       justify-content:center;
       pointer-events:none;
+      z-index:2;
     }
+
     .dateText{
       background: rgba(0,0,0,.55);
       color:#fff;
       padding:8px 12px;
       border-radius:999px;
-      font-weight:800;
+      font-weight:900;
       font-size:16px;
       letter-spacing:.2px;
       text-shadow: 0 2px 10px rgba(0,0,0,.5);
@@ -132,37 +153,51 @@
       text-overflow:ellipsis;
       white-space:nowrap;
     }
-    .bottomRow{
+
+    /* ✅ Avatars: plus centrés + en diagonale */
+    .creatorsLayer{
       position:absolute;
       left:0;
       right:0;
-      bottom:26px;
+      top: 245px;  /* <- plus centré (pas trop bas) */
       display:flex;
       justify-content:space-around;
-      align-items:flex-end;
+      align-items:flex-start;
       padding:0 18px;
       gap:14px;
+      z-index:2;
+      pointer-events:none;
     }
+
     .creator{
-      width: 140px;
+      width: 150px;
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:8px;
     }
+
+    .creator.left{
+      transform: translateY(26px);   /* ✅ diagonale */
+    }
+    .creator.right{
+      transform: translateY(-14px);  /* ✅ diagonale */
+    }
+
     .handle{
       background: rgba(0,0,0,.55);
       color:#fff;
       padding:6px 10px;
       border-radius:999px;
-      font-weight:800;
+      font-weight:900;
       font-size:14px;
-      max-width:140px;
+      max-width:150px;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
       text-shadow: 0 2px 10px rgba(0,0,0,.5);
     }
+
     .avatar{
       width:92px;
       height:92px;
@@ -180,21 +215,45 @@
       object-fit:cover;
       display:block;
     }
-    .hint{
-      font-size:12px;
-      opacity:.85;
-      margin-top:8px;
-      line-height:1.35;
+
+    /* ✅ Logo agence FIXE en bas à droite */
+    .agencyBadge{
+      position:absolute;
+      right: 18px;
+      bottom: 18px;
+      width: 84px;
+      height: 84px;
+      border-radius:50%;
+      border: 4px solid rgba(255,255,255,.92);
+      box-shadow: 0 12px 26px rgba(0,0,0,.38);
+      overflow:hidden;
+      background: rgba(0,0,0,.12);
+      z-index:2;
+      pointer-events:none; /* non cliquable / non modifiable */
+    }
+    .agencyBadge img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
-    /* Canvas export (caché) */
+    .hint{
+      font-size:12px;
+      opacity:.95;
+      margin-top:8px;
+      line-height:1.35;
+      text-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+
     canvas{ display:none; }
   </style>
 </head>
+
 <body>
 
   <div class="panel">
-    <h1>Générateur d’affiche (fond + 2 créateurs)</h1>
+    <h1>Générateur d’affiche</h1>
 
     <div class="field" style="margin-bottom:12px;">
       <label>Image de fond (remplit le rectangle)</label>
@@ -234,8 +293,8 @@
     </div>
 
     <div class="hint">
-      Astuce : mets une image de fond en bonne résolution (1080x1920 idéal).
-      Les avatars seront automatiquement recadrés en rond.
+      Mets ton logo agence dans le repo sous le nom <b>agency.png</b> (même dossier que index.html).<br>
+      Format idéal du fond : 1080×1920.
     </div>
   </div>
 
@@ -247,24 +306,31 @@
         <div class="dateText" id="datePreview">Le 26 Décembre à 21h30</div>
       </div>
 
-      <div class="bottomRow">
-        <div class="creator">
+      <!-- ✅ Creators centrés + diagonale -->
+      <div class="creatorsLayer">
+        <div class="creator left">
           <div class="handle" id="h1Preview">@Alexandra</div>
-          <div class="avatar" id="a1Preview">
+          <div class="avatar">
             <img id="a1Img" alt="" style="display:none;">
           </div>
         </div>
 
-        <div class="creator">
+        <div class="creator right">
           <div class="handle" id="h2Preview">@DK</div>
-          <div class="avatar" id="a2Preview">
+          <div class="avatar">
             <img id="a2Img" alt="" style="display:none;">
           </div>
         </div>
       </div>
+
+      <!-- ✅ Badge agence FIXE -->
+      <div class="agencyBadge">
+        <img id="agencyImg" src="agency.png" alt="Layon Agency">
+      </div>
     </div>
   </div>
 
+  <!-- Export 1080x1920 -->
   <canvas id="exportCanvas" width="1080" height="1920"></canvas>
 
 <script>
@@ -275,6 +341,7 @@
   const bgDiv = document.getElementById('bg');
   const a1Img = document.getElementById('a1Img');
   const a2Img = document.getElementById('a2Img');
+  const agencyImgEl = document.getElementById('agencyImg');
 
   const h1 = document.getElementById('h1');
   const h2 = document.getElementById('h2');
@@ -290,7 +357,6 @@
   const canvas = document.getElementById('exportCanvas');
   const ctx = canvas.getContext('2d');
 
-  // Helpers
   function fileToDataURL(file){
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -306,7 +372,6 @@
     return str.length > maxLen ? str.slice(0, maxLen - 1) + '…' : str;
   }
 
-  // Live text bindings
   function refreshText(){
     h1Preview.textContent = clampText(h1.value || '', 18) || '@createur1';
     h2Preview.textContent = clampText(h2.value || '', 18) || '@createur2';
@@ -315,7 +380,6 @@
   [h1, h2, date].forEach(el => el.addEventListener('input', refreshText));
   refreshText();
 
-  // Image inputs -> preview
   bgInput.addEventListener('change', async (e) => {
     const f = e.target.files && e.target.files[0];
     if (!f) return;
@@ -342,7 +406,6 @@
     a2Img.dataset.src = url;
   });
 
-  // Draw utilities for export
   function roundRect(ctx, x, y, w, h, r){
     const rr = Math.min(r, w/2, h/2);
     ctx.beginPath();
@@ -366,7 +429,6 @@
   }
 
   function drawCover(ctx, img, x, y, w, h){
-    // cover like CSS background-size: cover
     const iw = img.width, ih = img.height;
     const ir = iw / ih;
     const r = w / h;
@@ -388,15 +450,14 @@
   function drawPillText(ctx, text, centerX, y, fontPx){
     const padX = Math.round(fontPx * 0.85);
     const padY = Math.round(fontPx * 0.55);
-    ctx.font = `800 ${fontPx}px system-ui, -apple-system, Segoe UI, Roboto, Arial`;
-    const metrics = ctx.measureText(text);
-    const tw = metrics.width;
-    const th = fontPx; // approx
+
+    ctx.font = `900 ${fontPx}px system-ui, -apple-system, Segoe UI, Roboto, Arial`;
+    const tw = ctx.measureText(text).width;
+
     const w = tw + padX * 2;
-    const h = th + padY * 2;
+    const h = fontPx + padY * 2;
     const x = centerX - w/2;
 
-    // background
     ctx.save();
     ctx.globalAlpha = 0.58;
     ctx.fillStyle = "#000";
@@ -404,13 +465,12 @@
     ctx.fill();
     ctx.restore();
 
-    // text
     ctx.fillStyle = "#fff";
     ctx.textBaseline = "middle";
     ctx.fillText(text, x + padX, y + h/2);
   }
 
-  function drawAvatar(ctx, img, cx, cy, radius){
+  function drawAvatarCircle(ctx, img, cx, cy, radius){
     // outer white ring
     ctx.save();
     ctx.beginPath();
@@ -419,46 +479,34 @@
     ctx.fill();
     ctx.restore();
 
-    // clip circle and draw image cover
+    // clip circle
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.closePath();
     ctx.clip();
 
-    // cover inside circle
+    // cover inside
     const d = radius * 2;
-    // draw cover into bounding square then clip circle => ok
     drawCover(ctx, img, cx - radius, cy - radius, d, d);
-    ctx.restore();
-
-    // subtle shadow ring
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius + 10, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(0,0,0,0.15)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
     ctx.restore();
   }
 
   async function exportPNG(){
-    // Canvas export size: 1080x1920 (story format)
     const W = canvas.width, H = canvas.height;
 
-    // phone area inside canvas
+    // Phone inside canvas
     const phoneW = 900;
     const phoneH = 1600;
     const phoneX = (W - phoneW) / 2;
     const phoneY = (H - phoneH) / 2;
     const radius = 80;
 
-    // background behind phone
+    // Background behind phone (transparent-looking fallback)
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle = "#0f1115";
     ctx.fillRect(0,0,W,H);
 
-    // phone white frame
+    // Phone frame
     ctx.save();
     ctx.shadowColor = "rgba(0,0,0,0.55)";
     ctx.shadowBlur = 40;
@@ -469,12 +517,12 @@
     ctx.fill();
     ctx.restore();
 
-    // clip to phone
+    // Clip to phone
     ctx.save();
     roundRect(ctx, phoneX, phoneY, phoneW, phoneH, radius);
     ctx.clip();
 
-    // draw background image or plain white
+    // Draw background image
     const bgSrc = bgDiv.dataset.src;
     if (bgSrc){
       const bgImg = await loadImage(bgSrc);
@@ -484,45 +532,53 @@
       ctx.fillRect(phoneX, phoneY, phoneW, phoneH);
     }
 
-    // date pill (top)
+    // Date
     const dateText = clampText(date.value, 40) || "Date";
     drawPillText(ctx, dateText, phoneX + phoneW/2, phoneY + 60, 44);
 
-    // handles + avatars (bottom)
-    const yBase = phoneY + phoneH - 240;
-    const leftCx = phoneX + phoneW * 0.28;
-    const rightCx = phoneX + phoneW * 0.72;
+    // ✅ Creators positions (centrés + diagonale)
+    const leftCx  = phoneX + phoneW * 0.30;
+    const rightCx = phoneX + phoneW * 0.70;
+
+    const baseY = phoneY + 720; // <- plus centré (pas trop bas)
+    const leftY  = baseY + 50;  // <- diagonale
+    const rightY = baseY - 40;  // <- diagonale
 
     const h1Text = clampText(h1.value, 18) || "@createur1";
     const h2Text = clampText(h2.value, 18) || "@createur2";
 
-    drawPillText(ctx, h1Text, leftCx, yBase - 150, 40);
-    drawPillText(ctx, h2Text, rightCx, yBase - 150, 40);
-
-    // avatars (if missing, draw placeholder circle)
-    const a1Src = a1Img.dataset.src;
-    const a2Src = a2Img.dataset.src;
+    drawPillText(ctx, h1Text, leftCx,  leftY  - 170, 40);
+    drawPillText(ctx, h2Text, rightCx, rightY - 170, 40);
 
     const avatarR = 92;
 
+    const a1Src = a1Img.dataset.src;
+    const a2Src = a2Img.dataset.src;
+
     if (a1Src){
       const im1 = await loadImage(a1Src);
-      drawAvatar(ctx, im1, leftCx, yBase, avatarR);
+      drawAvatarCircle(ctx, im1, leftCx, leftY, avatarR);
     } else {
       ctx.fillStyle = "rgba(0,0,0,0.12)";
-      ctx.beginPath(); ctx.arc(leftCx, yBase, avatarR, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(leftCx, leftY, avatarR, 0, Math.PI*2); ctx.fill();
     }
 
     if (a2Src){
       const im2 = await loadImage(a2Src);
-      drawAvatar(ctx, im2, rightCx, yBase, avatarR);
+      drawAvatarCircle(ctx, im2, rightCx, rightY, avatarR);
     } else {
       ctx.fillStyle = "rgba(0,0,0,0.12)";
-      ctx.beginPath(); ctx.arc(rightCx, yBase, avatarR, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(rightCx, rightY, avatarR, 0, Math.PI*2); ctx.fill();
     }
 
-    // unclip
-    ctx.restore();
+    // ✅ Badge agence FIXE (non modifiable) en bas à droite, pas trop proche des autres
+    const agency = await loadImage("agency.png");
+    const badgeR = 78;
+    const badgeCx = phoneX + phoneW - 120;
+    const badgeCy = phoneY + phoneH - 120;
+    drawAvatarCircle(ctx, agency, badgeCx, badgeCy, badgeR);
+
+    ctx.restore(); // end clip
 
     // Export
     const dataURL = canvas.toDataURL("image/png");
@@ -537,7 +593,7 @@
   downloadBtn.addEventListener('click', () => {
     exportPNG().catch(err => {
       console.error(err);
-      alert("Erreur lors de l'export. Vérifie tes images.");
+      alert("Erreur lors de l'export. Vérifie que agency.png est bien dans le repo et que tes images sont valides.");
     });
   });
 
@@ -565,3 +621,4 @@
 </script>
 </body>
 </html>
+
