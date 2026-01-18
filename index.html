@@ -15,6 +15,9 @@
     :root{
       --phone-w: 360px;
       --phone-h: 640px;
+
+      /* ===== Police par défaut (modifiable via select) ===== */
+      --poster-font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     }
 
     /* Page TRANSPARENTE (pour embed Odoo) */
@@ -22,7 +25,7 @@
       margin:0;
       padding:0;
       background: transparent;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      font-family: var(--poster-font);
       color:#fff;
     }
 
@@ -73,7 +76,7 @@
       text-shadow: 0 2px 10px rgba(0,0,0,.35);
     }
 
-    input[type="text"], input[type="file"]{
+    input[type="text"], input[type="file"], select{
       width:100%;
       box-sizing:border-box;
       padding:10px 10px;
@@ -82,6 +85,7 @@
       background: rgba(0,0,0,.28);
       color:#fff;
       outline:none;
+      font-family: var(--poster-font);
     }
 
     input[type="file"]{
@@ -104,6 +108,7 @@
       color:white;
       font-weight:900;
       letter-spacing:.2px;
+      font-family: var(--poster-font);
     }
 
     button.secondary{
@@ -128,6 +133,9 @@
       border: 10px solid rgba(255,255,255,.08);
       transform: translateZ(0);
       isolation:isolate;
+
+      /* applique la police au rendu affiche */
+      font-family: var(--poster-font);
     }
 
     .bg{
@@ -139,7 +147,7 @@
       z-index:0;
     }
 
-    /* Un léger voile + vignette pour "affiche combat" (ça laisse voir le fond) */
+    /* Un léger voile + vignette pour "affiche combat" */
     .fightVignette{
       position:absolute;
       inset:0;
@@ -188,6 +196,24 @@
       white-space:nowrap;
     }
 
+    /* ===== BOOST (sous MATCH OFF) ===== */
+    .boostLine{
+      font-weight:1000;
+      font-size:14px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      padding:8px 14px;
+      border-radius:999px;
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+      text-shadow: 0 2px 10px rgba(0,0,0,.55);
+      max-width:100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
     .datePill{
       font-weight:900;
       font-size:16px;
@@ -230,7 +256,6 @@
     .creator.left{  transform: translateY(110px); }
     .creator.right{ transform: translateY(-75px); }
 
-    /* Handle style "cartouche combat" */
     .handle{
       padding:8px 12px;
       border-radius:999px;
@@ -252,7 +277,6 @@
       backdrop-filter: blur(2px);
     }
 
-    /* Avatars style "médaillon" */
     .avatar{
       width:100px;
       height:100px;
@@ -282,7 +306,7 @@
       width: 102px;
       height: 102px;
       overflow:hidden;
-       background: transparent;
+      background: transparent;
       z-index:2;
       pointer-events:none;
     }
@@ -294,7 +318,7 @@
       display:block;
     }
 
-    /* Petit "grain" pour vibe affiche (optionnel) */
+    /* Petit "grain" */
     .grain{
       position:absolute;
       inset:-20%;
@@ -315,97 +339,109 @@
       line-height:1.35;
       text-shadow: 0 2px 10px rgba(0,0,0,.35);
     }
+
     .chatgptBox{
-  margin-top:14px;
-}
+      margin-top:14px;
+    }
 
-.chatgptBtn{
-  display:block;
-  text-align:center;
-  padding:12px 14px;
-  border-radius:14px;
-  text-decoration:none;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#fff;
+    .chatgptBtn{
+      display:block;
+      text-align:center;
+      padding:12px 14px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:900;
+      letter-spacing:.2px;
+      color:#fff;
+      background: linear-gradient(
+        180deg,
+        rgba(32,156,238,.95),
+        rgba(26,92,210,.95)
+      );
+      border:1px solid rgba(255,255,255,.25);
+      box-shadow: 0 14px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(2px);
+      font-family: var(--poster-font);
+    }
 
-  background: linear-gradient(
-    180deg,
-    rgba(32,156,238,.95),
-    rgba(26,92,210,.95)
-  );
+    .chatgptBtn span{
+      display:block;
+      margin-top:4px;
+      font-size:12px;
+      font-weight:600;
+      opacity:.9;
+    }
 
-  border:1px solid rgba(255,255,255,.25);
-  box-shadow: 0 14px 30px rgba(0,0,0,.35);
-  backdrop-filter: blur(2px);
-}
+    .chatgptBtn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 18px 38px rgba(0,0,0,.45);
+    }
 
-.chatgptBtn span{
-  display:block;
-  margin-top:4px;
-  font-size:12px;
-  font-weight:600;
-  opacity:.9;
-}
+    /* ===== BOUTONS DORÉS ===== */
+    button:not(.secondary),
+    .chatgptBtn{
+      background:
+        linear-gradient(
+          180deg,
+          #f7e08c 0%,
+          #e6c45a 35%,
+          #cfa233 65%,
+          #b6891e 100%
+        );
+      color:#1a1400;
+      font-weight:1000;
+      letter-spacing:.3px;
+      border:1px solid rgba(255,255,255,.45);
+      box-shadow:
+        0 10px 24px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.65);
+      text-shadow:
+        0 1px 0 rgba(255,255,255,.4);
+    }
 
-.chatgptBtn:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 18px 38px rgba(0,0,0,.45);
-}
-/* ===== BOUTONS DORÉS ===== */
+    button:not(.secondary):hover,
+    .chatgptBtn:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+      box-shadow:
+        0 16px 36px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.7);
+    }
 
-button:not(.secondary),
-.chatgptBtn{
-  background:
-    linear-gradient(
-      180deg,
-      #f7e08c 0%,
-      #e6c45a 35%,
-      #cfa233 65%,
-      #b6891e 100%
-    );
-  color:#1a1400;
-  font-weight:1000;
-  letter-spacing:.3px;
+    button:not(.secondary):active,
+    .chatgptBtn:active{
+      transform: translateY(0);
+      filter: brightness(.95);
+    }
 
-  border:1px solid rgba(255,255,255,.45);
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.65);
+    .chatgptBtn span{
+      color:#3a2b00;
+      opacity:.85;
+    }
 
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.4);
-}
+    button.secondary{
+      background: rgba(0,0,0,.28);
+      color:#fff;
+    }
 
-/* Hover = effet métal vivant */
-button:not(.secondary):hover,
-.chatgptBtn:hover{
-  transform: translateY(-1px);
-  filter: brightness(1.08);
-  box-shadow:
-    0 16px 36px rgba(0,0,0,.55),
-    inset 0 1px 0 rgba(255,255,255,.7);
-}
-
-/* Active */
-button:not(.secondary):active,
-.chatgptBtn:active{
-  transform: translateY(0);
-  filter: brightness(.95);
-}
-
-/* Texte secondaire du bouton ChatGPT */
-.chatgptBtn span{
-  color:#3a2b00;
-  opacity:.85;
-}
-
-/* Bouton reset reste sobre */
-button.secondary{
-  background: rgba(0,0,0,.28);
-  color:#fff;
-}
-
+    /* ===== Toggle boost: état ON (le bouton devient doré) ===== */
+    button.boostToggle.isOn{
+      background:
+        linear-gradient(
+          180deg,
+          #f7e08c 0%,
+          #e6c45a 35%,
+          #cfa233 65%,
+          #b6891e 100%
+        );
+      color:#1a1400;
+      font-weight:1000;
+      border:1px solid rgba(255,255,255,.45);
+      box-shadow:
+        0 10px 24px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.65);
+      text-shadow: 0 1px 0 rgba(255,255,255,.4);
+    }
   </style>
 </head>
 
@@ -446,23 +482,44 @@ button.secondary{
       <input id="date" type="text" placeholder="Date & heure" value="Date & heure" />
     </div>
 
+    <!-- ===== Choix police ===== -->
+    <div class="field" style="margin-top:12px;">
+      <label>Police d’écriture</label>
+      <select id="fontSelect">
+        <!-- Safe fonts (no internet needed) -->
+        <option value='system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif' selected>Système (par défaut)</option>
+        <option value='Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif'>Impact</option>
+        <option value='"Arial Black", Arial, sans-serif'>Arial Black</option>
+        <option value='"Trebuchet MS", Trebuchet, Arial, sans-serif'>Trebuchet</option>
+
+        <!-- Google Fonts (chargées si choisies) -->
+        <option value='"Bebas Neue", system-ui, sans-serif' data-google="Bebas+Neue">Bebas Neue (Google)</option>
+        <option value='"Oswald", system-ui, sans-serif' data-google="Oswald:wght@400;700">Oswald (Google)</option>
+        <option value='"Anton", system-ui, sans-serif' data-google="Anton">Anton (Google)</option>
+      </select>
+    </div>
+
     <div class="btns">
       <button id="downloadBtn">Télécharger en PNG</button>
       <button id="resetBtn" class="secondary">Réinitialiser</button>
+
+      <!-- Toggle boost -->
+      <button id="boostBtn" class="secondary boostToggle" aria-pressed="false">
+        SANS BOOST : OFF
+      </button>
     </div>
-<div class="chatgptBox">
-  <a 
-    href="https://chatgpt.com" 
-    target="_blank" 
-    rel="noopener"
-    class="chatgptBtn"
-  >
-    🎨 Générer une image de fond avec ChatGPT<br>
-    <span>Crée ton visuel puis importe-le ici</span>
-  </a>
-</div>
 
-
+    <div class="chatgptBox">
+      <a
+        href="https://chatgpt.com"
+        target="_blank"
+        rel="noopener"
+        class="chatgptBtn"
+      >
+        🎨 Générer une image de fond avec ChatGPT<br>
+        <span>Crée ton visuel puis importe-le ici</span>
+      </a>
+    </div>
   </div>
 
   <div class="previewWrap">
@@ -470,13 +527,15 @@ button.secondary{
       <div class="bg" id="bg"></div>
       <div class="fightVignette"></div>
 
-      <!-- Header style combat -->
       <div class="topStack">
         <div class="matchOff" id="matchOffPreview">MATCH OFF</div>
+
+        <!-- Texte Boost sous MATCH OFF -->
+        <div class="boostLine" id="boostPreview">SANS BOOST</div>
+
         <div class="datePill" id="datePreview">Date & heure</div>
       </div>
 
-      <!-- Creators -->
       <div class="creatorsLayer">
         <div class="creator left">
           <div class="handle" id="h1Preview">@créa 1</div>
@@ -493,7 +552,6 @@ button.secondary{
         </div>
       </div>
 
-      <!-- Badge agence fixe -->
       <div class="agencyBadge">
         <img id="agencyImg" src="agency.png" alt="Layon Agency">
       </div>
@@ -524,6 +582,80 @@ button.secondary{
 
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
+
+    // ===== BOOST =====
+    const boostBtn = document.getElementById('boostBtn');
+    const boostPreview = document.getElementById('boostPreview');
+    let boostOn = false;
+
+    function refreshBoost(){
+      boostPreview.textContent = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
+
+      if (boostBtn) {
+        boostBtn.textContent = boostOn ? 'AVEC BOOST : ON' : 'SANS BOOST : OFF';
+        boostBtn.classList.toggle('isOn', boostOn);
+        boostBtn.setAttribute('aria-pressed', String(boostOn));
+      }
+    }
+
+    if (boostBtn) {
+      boostBtn.addEventListener('click', () => {
+        boostOn = !boostOn;
+        refreshBoost();
+      });
+    }
+
+    refreshBoost();
+
+    // ===== POLICE =====
+    const fontSelect = document.getElementById('fontSelect');
+
+    function ensureGoogleFontLoaded(googleValue){
+      if (!googleValue) return;
+      const id = 'gf-' + googleValue.replace(/[^a-z0-9_-]/gi, '');
+      if (document.getElementById(id)) return;
+
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=' + googleValue + '&display=swap';
+      document.head.appendChild(link);
+    }
+
+    function applyFontFromSelect(){
+      const opt = fontSelect.options[fontSelect.selectedIndex];
+      const fontStack = opt.value;
+      const google = opt.getAttribute('data-google');
+
+      if (google) ensureGoogleFontLoaded(google);
+
+      document.documentElement.style.setProperty('--poster-font', fontStack);
+
+      // Optionnel: persister
+      try { localStorage.setItem('posterFont', fontStack); } catch(e){}
+      try { localStorage.setItem('posterFontGoogle', google || ''); } catch(e){}
+    }
+
+    // Restore font if saved
+    (function restoreFont(){
+      try{
+        const saved = localStorage.getItem('posterFont');
+        const savedGoogle = localStorage.getItem('posterFontGoogle');
+        if (saved){
+          // positionner le select sur la bonne valeur si existe
+          for (let i=0;i<fontSelect.options.length;i++){
+            if (fontSelect.options[i].value === saved){
+              fontSelect.selectedIndex = i;
+              break;
+            }
+          }
+          if (savedGoogle) ensureGoogleFontLoaded(savedGoogle);
+          document.documentElement.style.setProperty('--poster-font', saved);
+        }
+      }catch(e){}
+    })();
+
+    fontSelect.addEventListener('change', applyFontFromSelect);
 
     function fileToDataURL(file){
       return new Promise((resolve, reject) => {
@@ -641,9 +773,16 @@ button.secondary{
       h2.value = '@créa 2';
       date.value = 'Date & Heure';
       refreshText();
+
+      // reset boost
+      boostOn = false;
+      refreshBoost();
+
+      // reset police (optionnel: revient à système)
+      fontSelect.selectedIndex = 0;
+      applyFontFromSelect();
     });
   </script>
 </body>
 </html>
-
 
