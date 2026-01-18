@@ -5,26 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Générateur d'affiche</title>
 
-  <!--
-    FICHIERS A METTRE DANS TON REPO (même dossier que index.html) :
-    - index.html (ce fichier)
-    - agency.png (ton logo fixe)
-  -->
-
   <style>
     :root{
       --phone-w: 360px;
       --phone-h: 640px;
-
-      /* Police (modifiable) */
       --poster-font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-
-      /* Etats UI */
       --match-mode: gradient; /* solid | gradient */
       --boost-mode: solid;    /* solid | gradient */
     }
 
-    /* Page TRANSPARENTE (pour embed Odoo) */
     html, body{
       margin:0;
       padding:0;
@@ -42,14 +31,12 @@
       justify-content:center;
     }
 
-    /* Panneau gauche transparent */
     .panel{
       width:min(520px, 95vw);
       background: rgba(0,0,0,.10);
       border:1px solid rgba(255,255,255,.18);
       border-radius:16px;
       padding:16px;
-      box-shadow: none;
       backdrop-filter: blur(2px);
     }
 
@@ -119,7 +106,6 @@
       color:#fff;
     }
 
-    /* Preview */
     .previewWrap{
       width: min(420px, 95vw);
       display:flex;
@@ -149,7 +135,6 @@
       z-index:0;
     }
 
-    /* Vignette */
     .fightVignette{
       position:absolute;
       inset:0;
@@ -163,7 +148,6 @@
       pointer-events:none;
     }
 
-    /* Header */
     .topStack{
       position:absolute;
       left:18px;
@@ -173,76 +157,44 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:10px;
+      gap:12px;
       pointer-events:none;
     }
 
-    /* Pills */
-    .matchOff{
-      width:100%;
-      max-width:100%;
-      font-weight:1000;
-      font-size:26px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      padding:10px 16px;
-      border-radius:999px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-      border: 1px solid rgba(255,255,255,.25);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      text-shadow:
-        0 2px 0 rgba(0,0,0,.35),
-        0 0 18px rgba(255,255,255,.18);
-      backdrop-filter: blur(2px);
-      overflow:hidden;
-      white-space:nowrap;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      height:56px;
-    }
-
+    /* ✅ SUPPRIME LES RECTANGLES : plus de background/border/shadow */
+    .matchOff,
     .boostLine{
       width:100%;
-      max-width:100%;
-      font-weight:1000;
-      font-size:14px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      padding:8px 14px;
-      border-radius:999px;
-      background: rgba(0,0,0,.45);
-      border: 1px solid rgba(255,255,255,.16);
-      box-shadow: 0 10px 24px rgba(0,0,0,.35);
-      text-shadow: 0 2px 10px rgba(0,0,0,.55);
-      overflow:hidden;
-      white-space:nowrap;
       display:flex;
       align-items:center;
       justify-content:center;
-      height:40px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      border-radius: 0;
     }
 
-    /* SVG texte (dégradé exportable partout) */
+    /* Hauteurs pour garder les mêmes espacements */
+    .matchOff{ height:56px; }
+    .boostLine{ height:40px; }
+
     .gradTextSvg{
       width:100%;
       height:100%;
       display:block;
     }
 
-    /* Match text */
     #matchText{
       font-family: var(--poster-font);
       font-weight:1000;
-      letter-spacing: 12px; /* dans le viewBox */
+      letter-spacing: 12px;
       text-transform: uppercase;
       paint-order: stroke;
       stroke: rgba(0,0,0,.35);
       stroke-width: 12px;
     }
 
-    /* Boost text */
     #boostText{
       font-family: var(--poster-font);
       font-weight:1000;
@@ -269,7 +221,6 @@
       white-space:nowrap;
     }
 
-    /* Creators */
     .creatorsLayer{
       position:absolute;
       left:0;
@@ -337,7 +288,6 @@
       display:block;
     }
 
-    /* Logo */
     .agencyBadge{
       position:absolute;
       right: 34px;
@@ -381,15 +331,19 @@
       font-weight:900;
       letter-spacing:.2px;
       color:#fff;
-      background: linear-gradient(
-        180deg,
-        rgba(32,156,238,.95),
-        rgba(26,92,210,.95)
-      );
       border:1px solid rgba(255,255,255,.25);
       box-shadow: 0 14px 30px rgba(0,0,0,.35);
       backdrop-filter: blur(2px);
       font-family: var(--poster-font);
+      background:
+        linear-gradient(
+          180deg,
+          #f7e08c 0%,
+          #e6c45a 35%,
+          #cfa233 65%,
+          #b6891e 100%
+        );
+      color:#1a1400;
     }
 
     .chatgptBtn span{
@@ -398,11 +352,10 @@
       font-size:12px;
       font-weight:600;
       opacity:.9;
+      color:#3a2b00;
     }
 
-    /* BOUTONS DORÉS */
-    button:not(.secondary),
-    .chatgptBtn{
+    button:not(.secondary){
       background:
         linear-gradient(
           180deg,
@@ -422,27 +375,6 @@
         0 1px 0 rgba(255,255,255,.4);
     }
 
-    button:not(.secondary):hover,
-    .chatgptBtn:hover{
-      transform: translateY(-1px);
-      filter: brightness(1.08);
-      box-shadow:
-        0 16px 36px rgba(0,0,0,.55),
-        inset 0 1px 0 rgba(255,255,255,.7);
-    }
-
-    button:not(.secondary):active,
-    .chatgptBtn:active{
-      transform: translateY(0);
-      filter: brightness(.95);
-    }
-
-    .chatgptBtn span{
-      color:#3a2b00;
-      opacity:.85;
-    }
-
-    /* Toggle boost: état ON */
     button.boostToggle.isOn{
       background:
         linear-gradient(
@@ -500,7 +432,6 @@
       <input id="date" type="text" placeholder="Date & heure" value="Date & heure" />
     </div>
 
-    <!-- Police -->
     <div class="field" style="margin-top:12px;">
       <label>Police d’écriture</label>
       <select id="fontSelect">
@@ -514,7 +445,6 @@
       </select>
     </div>
 
-    <!-- MATCH OFF style -->
     <div class="field" style="margin-top:12px;">
       <label>Style "MATCH OFF"</label>
       <select id="matchMode">
@@ -539,7 +469,6 @@
       <input id="matchG1" type="color" value="#f7e08c" />
     </div>
 
-    <!-- BOOST style -->
     <div class="field" style="margin-top:12px;">
       <label>Style "BOOST"</label>
       <select id="boostMode">
@@ -551,7 +480,7 @@
     <div class="row" style="margin-top:0;">
       <div class="field" id="boostSolidWrap">
         <label>Couleur unie BOOST</label>
-        <input id="boostColor" type="color" value="#ffffff" />
+        <input id="boostColor" type="color" value="#66ccff" />
       </div>
       <div class="field" id="boostG2Wrap" style="display:none;">
         <label>Dégradé BOOST (fin)</label>
@@ -567,20 +496,11 @@
     <div class="btns">
       <button id="downloadBtn">Télécharger en PNG</button>
       <button id="resetBtn" class="secondary">Réinitialiser</button>
-
-      <!-- Toggle boost -->
-      <button id="boostBtn" class="secondary boostToggle" aria-pressed="false">
-        SANS BOOST : OFF
-      </button>
+      <button id="boostBtn" class="secondary boostToggle" aria-pressed="false">SANS BOOST : OFF</button>
     </div>
 
     <div class="chatgptBox">
-      <a
-        href="https://chatgpt.com"
-        target="_blank"
-        rel="noopener"
-        class="chatgptBtn"
-      >
+      <a href="https://chatgpt.com" target="_blank" rel="noopener" class="chatgptBtn">
         🎨 Générer une image de fond avec ChatGPT<br>
         <span>Crée ton visuel puis importe-le ici</span>
       </a>
@@ -593,7 +513,6 @@
       <div class="fightVignette"></div>
 
       <div class="topStack">
-        <!-- MATCH OFF (SVG gradient export-safe) -->
         <div class="matchOff" id="matchOffPreview">
           <svg class="gradTextSvg" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <defs>
@@ -603,13 +522,10 @@
               </linearGradient>
             </defs>
             <text id="matchText" x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-size="78"
-                  fill="url(#matchGrad)">
-              MATCH OFF
-            </text>
+                  fill="url(#matchGrad)">MATCH OFF</text>
           </svg>
         </div>
 
-        <!-- BOOST (SVG gradient export-safe) -->
         <div class="boostLine" id="boostPreview">
           <svg class="gradTextSvg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <defs>
@@ -619,9 +535,7 @@
               </linearGradient>
             </defs>
             <text id="boostText" x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-size="56"
-                  fill="url(#boostGrad)">
-              SANS BOOST
-            </text>
+                  fill="url(#boostGrad)">SANS BOOST</text>
           </svg>
         </div>
 
@@ -652,7 +566,6 @@
     </div>
   </div>
 
-  <!-- html2canvas -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <script>
@@ -675,7 +588,6 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // SVG refs
     const matchText = document.getElementById('matchText');
     const boostText = document.getElementById('boostText');
 
@@ -684,14 +596,12 @@
     const boostStop1 = document.getElementById('boostStop1');
     const boostStop2 = document.getElementById('boostStop2');
 
-    // BOOST toggle
     const boostBtn = document.getElementById('boostBtn');
     let boostOn = false;
 
     function refreshBoostText(){
       const label = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
       boostText.textContent = label;
-
       boostBtn.textContent = boostOn ? 'AVEC BOOST : ON' : 'SANS BOOST : OFF';
       boostBtn.classList.toggle('isOn', boostOn);
       boostBtn.setAttribute('aria-pressed', String(boostOn));
@@ -703,14 +613,12 @@
       saveAll();
     });
 
-    // Font
     const fontSelect = document.getElementById('fontSelect');
 
     function ensureGoogleFontLoaded(googleValue){
       if (!googleValue) return;
       const id = 'gf-' + googleValue.replace(/[^a-z0-9_-]/gi, '');
       if (document.getElementById(id)) return;
-
       const link = document.createElement('link');
       link.id = id;
       link.rel = 'stylesheet';
@@ -723,11 +631,9 @@
       const fontStack = opt.value;
       const google = opt.getAttribute('data-google');
       if (google) ensureGoogleFontLoaded(google);
-
       document.documentElement.style.setProperty('--poster-font', fontStack);
     }
 
-    // Styles MATCH/BOOST
     const matchMode = document.getElementById('matchMode');
     const matchColor = document.getElementById('matchColor');
     const matchG1 = document.getElementById('matchG1');
@@ -747,7 +653,6 @@
     const boostG2Wrap = document.getElementById('boostG2Wrap');
 
     function applyMatchStops(){
-      // mode solid => stops identiques (donc "dégradé" = couleur unie)
       if (matchMode.value === 'solid') {
         matchStop1.setAttribute('stop-color', matchColor.value);
         matchStop2.setAttribute('stop-color', matchColor.value);
@@ -788,7 +693,6 @@
       applyBoostStops();
     }
 
-    // Text fields
     function fileToDataURL(file){
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -853,8 +757,6 @@
 
     async function exportPNG(){
       const phoneEl = document.getElementById("phone");
-
-      // Fonts + images
       if (document.fonts && document.fonts.ready) await document.fonts.ready;
       await waitForImages(phoneEl);
 
@@ -887,7 +789,6 @@
       });
     });
 
-    // Save / Restore
     function saveAll(){
       try{
         const opt = fontSelect.options[fontSelect.selectedIndex];
@@ -914,7 +815,6 @@
 
     function restoreAll(){
       try{
-        // Font
         const savedFont = localStorage.getItem('posterFont');
         const savedGoogle = localStorage.getItem('posterFontGoogle');
         if (savedFont){
@@ -930,7 +830,6 @@
           applyFontFromSelect();
         }
 
-        // Modes + couleurs
         const mm = localStorage.getItem('matchMode'); if (mm) matchMode.value = mm;
         const mc = localStorage.getItem('matchColor'); if (mc) matchColor.value = mc;
         const mg1 = localStorage.getItem('matchG1'); if (mg1) matchG1.value = mg1;
@@ -943,7 +842,6 @@
 
         boostOn = localStorage.getItem('boostOn') === '1';
 
-        // Texte
         const sh1 = localStorage.getItem('h1'); if (sh1) h1.value = sh1;
         const sh2 = localStorage.getItem('h2'); if (sh2) h2.value = sh2;
         const sd = localStorage.getItem('date'); if (sd) date.value = sd;
@@ -959,7 +857,6 @@
       }
     }
 
-    // Listeners
     fontSelect.addEventListener('change', () => { applyFontFromSelect(); saveAll(); });
 
     matchMode.addEventListener('change', () => { applyAllStyles(); saveAll(); });
@@ -972,10 +869,8 @@
     boostG1.addEventListener('input', () => { applyAllStyles(); saveAll(); });
     boostG2.addEventListener('input', () => { applyAllStyles(); saveAll(); });
 
-    // Init
     restoreAll();
 
-    // Reset
     resetBtn.addEventListener('click', () => {
       bgDiv.style.backgroundImage = '';
       delete bgDiv.dataset.src;
@@ -1006,17 +901,14 @@
       matchG2.value = '#b6891e';
 
       boostMode.value = 'solid';
-      boostColor.value = '#ffffff';
+      boostColor.value = '#66ccff';
       boostG1.value = '#9be8ff';
       boostG2.value = '#2a74ff';
 
       applyAllStyles();
 
-      try{
-        localStorage.clear();
-      }catch(e){}
+      try{ localStorage.clear(); }catch(e){}
     });
   </script>
 </body>
 </html>
-
