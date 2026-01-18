@@ -22,6 +22,15 @@
       /* Etats UI */
       --match-mode: gradient; /* solid | gradient */
       --boost-mode: solid;    /* solid | gradient */
+
+      /* Dégradés (pilotés par JS) */
+      --match-g1: #f7e08c;
+      --match-g2: #b6891e;
+      --match-solid: #ffffff;
+
+      --boost-g1: #9be8ff;
+      --boost-g2: #2a74ff;
+      --boost-solid: #ffffff;
     }
 
     /* Page TRANSPARENTE (pour embed Odoo) */
@@ -112,6 +121,7 @@
       font-weight:900;
       letter-spacing:.2px;
       font-family: var(--poster-font);
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
     }
 
     button.secondary{
@@ -177,14 +187,15 @@
       pointer-events:none;
     }
 
-    /* ==========================
-       PILLS (FIX largeur)
-       -> Avant: width:100% (prenait tout l'écran)
-       -> Maintenant: largeur "normale" centrée
-       ========================== */
-
+    /* Pills */
     .matchOff{
-      width: min(320px, 100%);
+      /* ✅ IMPORTANT: la bulle épouse le contenu */
+      width: fit-content;
+      max-width: calc(100% - 0px);
+      display: inline-flex;
+      align-items:center;
+      justify-content:center;
+
       font-weight:1000;
       font-size:26px;
       letter-spacing:2px;
@@ -195,21 +206,21 @@
         linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
       border: 1px solid rgba(255,255,255,.25);
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      text-shadow:
-        0 2px 0 rgba(0,0,0,.35),
-        0 0 18px rgba(255,255,255,.18);
       backdrop-filter: blur(2px);
+
       overflow:hidden;
       white-space:nowrap;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      height:56px;
       margin: 0 auto;
     }
 
     .boostLine{
-      width: min(260px, 100%);
+      /* ✅ IMPORTANT: la bulle épouse le contenu */
+      width: fit-content;
+      max-width: calc(100% - 0px);
+      display: inline-flex;
+      align-items:center;
+      justify-content:center;
+
       font-weight:1000;
       font-size:14px;
       letter-spacing:2px;
@@ -220,43 +231,45 @@
       border: 1px solid rgba(255,255,255,.16);
       box-shadow: 0 10px 24px rgba(0,0,0,.35);
       text-shadow: 0 2px 10px rgba(0,0,0,.55);
+
       overflow:hidden;
       white-space:nowrap;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      height:40px;
       margin: 0 auto;
     }
 
-    /* SVG texte (dégradé exportable partout)
-       -> Le SVG remplit maintenant la "pill" (mais la pill n'est plus full-width) */
-    .gradTextSvg{
-      width:100%;
-      height:100%;
-      display:block;
-    }
-
-    /* Match text */
-    #matchText{
+    /* Texte en dégradé (remplace le SVG) */
+    .gradText{
+      display:inline-block;
       font-family: var(--poster-font);
       font-weight:1000;
-      letter-spacing: 12px; /* dans le viewBox */
       text-transform: uppercase;
-      paint-order: stroke;
-      stroke: rgba(0,0,0,.35);
-      stroke-width: 12px;
+
+      /* dégradé (par défaut) */
+      background: linear-gradient(90deg, var(--match-g1), var(--match-g2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+
+      /* contour / effet proche de l'ancien SVG stroke */
+      text-shadow:
+        0 2px 0 rgba(0,0,0,.35),
+        0 0 18px rgba(255,255,255,.18);
     }
 
-    /* Boost text */
-    #boostText{
-      font-family: var(--poster-font);
-      font-weight:1000;
-      letter-spacing: 10px;
-      text-transform: uppercase;
-      paint-order: stroke;
-      stroke: rgba(0,0,0,.35);
-      stroke-width: 10px;
+    .gradText.boost{
+      background: linear-gradient(90deg, var(--boost-g1), var(--boost-g2));
+      text-shadow: 0 2px 10px rgba(0,0,0,.55);
+    }
+
+    /* Mode SOLID: on force la couleur (JS bascule class) */
+    .gradText.isSolid{
+      background: none !important;
+      -webkit-background-clip: initial;
+      background-clip: initial;
+      color: var(--match-solid);
+    }
+    .gradText.boost.isSolid{
+      color: var(--boost-solid);
     }
 
     .datePill{
@@ -599,36 +612,14 @@
       <div class="fightVignette"></div>
 
       <div class="topStack">
-        <!-- MATCH OFF (SVG gradient export-safe) -->
+        <!-- ✅ MATCH OFF : span (bulle fit-content) -->
         <div class="matchOff" id="matchOffPreview">
-          <svg class="gradTextSvg" viewBox="0 0 1000 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <defs>
-              <linearGradient id="matchGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop id="matchStop1" offset="0%" stop-color="#f7e08c"></stop>
-                <stop id="matchStop2" offset="100%" stop-color="#b6891e"></stop>
-              </linearGradient>
-            </defs>
-            <text id="matchText" x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-size="78"
-                  fill="url(#matchGrad)">
-              MATCH OFF
-            </text>
-          </svg>
+          <span id="matchLabel" class="gradText">MATCH OFF</span>
         </div>
 
-        <!-- BOOST (SVG gradient export-safe) -->
+        <!-- ✅ BOOST : span (bulle fit-content) -->
         <div class="boostLine" id="boostPreview">
-          <svg class="gradTextSvg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <defs>
-              <linearGradient id="boostGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop id="boostStop1" offset="0%" stop-color="#9be8ff"></stop>
-                <stop id="boostStop2" offset="100%" stop-color="#2a74ff"></stop>
-              </linearGradient>
-            </defs>
-            <text id="boostText" x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-size="56"
-                  fill="url(#boostGrad)">
-              SANS BOOST
-            </text>
-          </svg>
+          <span id="boostLabel" class="gradText boost">SANS BOOST</span>
         </div>
 
         <div class="datePill" id="datePreview">Date & heure</div>
@@ -681,14 +672,9 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // SVG refs
-    const matchText = document.getElementById('matchText');
-    const boostText = document.getElementById('boostText');
-
-    const matchStop1 = document.getElementById('matchStop1');
-    const matchStop2 = document.getElementById('matchStop2');
-    const boostStop1 = document.getElementById('boostStop1');
-    const boostStop2 = document.getElementById('boostStop2');
+    // ✅ Nouveau : spans au lieu du SVG
+    const matchLabel = document.getElementById('matchLabel');
+    const boostLabel = document.getElementById('boostLabel');
 
     // BOOST toggle
     const boostBtn = document.getElementById('boostBtn');
@@ -696,7 +682,7 @@
 
     function refreshBoostText(){
       const label = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
-      boostText.textContent = label;
+      boostLabel.textContent = label;
 
       boostBtn.textContent = boostOn ? 'AVEC BOOST : ON' : 'SANS BOOST : OFF';
       boostBtn.classList.toggle('isOn', boostOn);
@@ -753,23 +739,28 @@
     const boostG2Wrap = document.getElementById('boostG2Wrap');
 
     function applyMatchStops(){
-      // mode solid => stops identiques (donc "dégradé" = couleur unie)
+      // on pousse les valeurs dans des CSS variables
+      document.documentElement.style.setProperty('--match-solid', matchColor.value);
+      document.documentElement.style.setProperty('--match-g1', matchG1.value);
+      document.documentElement.style.setProperty('--match-g2', matchG2.value);
+
+      // mode solid => pas de gradient, couleur unie
       if (matchMode.value === 'solid') {
-        matchStop1.setAttribute('stop-color', matchColor.value);
-        matchStop2.setAttribute('stop-color', matchColor.value);
+        matchLabel.classList.add('isSolid');
       } else {
-        matchStop1.setAttribute('stop-color', matchG1.value);
-        matchStop2.setAttribute('stop-color', matchG2.value);
+        matchLabel.classList.remove('isSolid');
       }
     }
 
     function applyBoostStops(){
+      document.documentElement.style.setProperty('--boost-solid', boostColor.value);
+      document.documentElement.style.setProperty('--boost-g1', boostG1.value);
+      document.documentElement.style.setProperty('--boost-g2', boostG2.value);
+
       if (boostMode.value === 'solid') {
-        boostStop1.setAttribute('stop-color', boostColor.value);
-        boostStop2.setAttribute('stop-color', boostColor.value);
+        boostLabel.classList.add('isSolid');
       } else {
-        boostStop1.setAttribute('stop-color', boostG1.value);
-        boostStop2.setAttribute('stop-color', boostG2.value);
+        boostLabel.classList.remove('isSolid');
       }
     }
 
@@ -1025,3 +1016,4 @@
   </script>
 </body>
 </html>
+
