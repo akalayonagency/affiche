@@ -22,15 +22,6 @@
       /* Etats UI */
       --match-mode: gradient; /* solid | gradient */
       --boost-mode: solid;    /* solid | gradient */
-
-      /* Vars pour texte (pilotées par JS) */
-      --match-solid: #ffffff;
-      --match-g1: #f7e08c;
-      --match-g2: #b6891e;
-
-      --boost-solid: #ffffff;
-      --boost-g1: #9be8ff;
-      --boost-g2: #2a74ff;
     }
 
     /* Page TRANSPARENTE (pour embed Odoo) */
@@ -191,19 +182,11 @@
     .matchOff{
       width: fit-content;
       max-width: 100%;
-      font-weight:1000;
-      font-size:26px;
-      letter-spacing:2px;
-      text-transform:uppercase;
       padding:10px 16px;
       border-radius:999px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
       border: 1px solid rgba(255,255,255,.25);
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      text-shadow:
-        0 2px 0 rgba(0,0,0,.35),
-        0 0 18px rgba(255,255,255,.18);
       backdrop-filter: blur(2px);
       overflow:hidden;
       white-space:nowrap;
@@ -215,16 +198,11 @@
     .boostLine{
       width: fit-content;
       max-width: 100%;
-      font-weight:1000;
-      font-size:14px;
-      letter-spacing:2px;
-      text-transform:uppercase;
       padding:8px 14px;
       border-radius:999px;
       background: rgba(0,0,0,.45);
       border: 1px solid rgba(255,255,255,.16);
       box-shadow: 0 10px 24px rgba(0,0,0,.35);
-      text-shadow: 0 2px 10px rgba(0,0,0,.55);
       overflow:hidden;
       white-space:nowrap;
       display:inline-flex;
@@ -232,43 +210,15 @@
       justify-content:center;
     }
 
-    /* Texte gradient (preview) */
-    .gradText{
-      display:inline-block;
-      font-family: var(--poster-font);
-      font-weight:1000;
-      text-transform: uppercase;
-
-      background: linear-gradient(90deg, var(--match-g1), var(--match-g2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-
-      /* ✅ FIX visibilité (Safari / Chrome parfois) */
-      -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 2px 0 rgba(0,0,0,.35),
-        0 0 18px rgba(255,255,255,.18);
+    /* ✅ TITRES EN IMAGE (CANVAS) => preview = export = mobile OK */
+    #matchImg, #boostImg{
+      display:block;
+      height:auto;
+      max-width:100%;
+      image-rendering:auto;
     }
-
-    .gradText.boost{
-      background: linear-gradient(90deg, var(--boost-g1), var(--boost-g2));
-      text-shadow: 0 2px 10px rgba(0,0,0,.55);
-    }
-
-    .gradText.isSolid{
-      background: none !important;
-      -webkit-background-clip: initial;
-      background-clip: initial;
-      color: var(--match-solid);
-      -webkit-text-fill-color: currentColor;
-    }
-
-    .gradText.boost.isSolid{
-      color: var(--boost-solid);
-      -webkit-text-fill-color: currentColor;
-    }
+    #matchImg{ height: 52px; }
+    #boostImg{ height: 34px; }
 
     .datePill{
       font-weight:900;
@@ -398,11 +348,7 @@
       font-weight:900;
       letter-spacing:.2px;
       color:#fff;
-      background: linear-gradient(
-        180deg,
-        rgba(32,156,238,.95),
-        rgba(26,92,210,.95)
-      );
+      background: linear-gradient(180deg, rgba(32,156,238,.95), rgba(26,92,210,.95));
       border:1px solid rgba(255,255,255,.25);
       box-shadow: 0 14px 30px rgba(0,0,0,.35);
       backdrop-filter: blur(2px);
@@ -435,8 +381,7 @@
       box-shadow:
         0 10px 24px rgba(0,0,0,.45),
         inset 0 1px 0 rgba(255,255,255,.65);
-      text-shadow:
-        0 1px 0 rgba(255,255,255,.4);
+      text-shadow: 0 1px 0 rgba(255,255,255,.4);
     }
 
     button:not(.secondary):hover,
@@ -611,11 +556,11 @@
 
       <div class="topStack">
         <div class="matchOff" id="matchOffPreview">
-          <span id="matchLabel" class="gradText">MATCH OFF</span>
+          <img id="matchImg" alt="MATCH OFF" />
         </div>
 
         <div class="boostLine" id="boostPreview">
-          <span id="boostLabel" class="gradText boost">SANS BOOST</span>
+          <img id="boostImg" alt="BOOST" />
         </div>
 
         <div class="datePill" id="datePreview">Date & heure</div>
@@ -668,19 +613,15 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // Spans
-    const matchLabel = document.getElementById('matchLabel');
-    const boostLabel = document.getElementById('boostLabel');
+    // Titres en image
+    const matchImg = document.getElementById('matchImg');
+    const boostImg = document.getElementById('boostImg');
 
     // BOOST toggle
     const boostBtn = document.getElementById('boostBtn');
     let boostOn = false;
-    window.boostOn = boostOn;
 
-    function refreshBoostText(){
-      const label = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
-      boostLabel.textContent = label;
-
+    function refreshBoostButton(){
       boostBtn.textContent = boostOn ? 'AVEC BOOST : ON' : 'SANS BOOST : OFF';
       boostBtn.classList.toggle('isOn', boostOn);
       boostBtn.setAttribute('aria-pressed', String(boostOn));
@@ -688,8 +629,8 @@
 
     boostBtn.addEventListener('click', () => {
       boostOn = !boostOn;
-      window.boostOn = boostOn;
-      refreshBoostText();
+      refreshBoostButton();
+      renderTitles();
       saveAll();
     });
 
@@ -736,24 +677,6 @@
     const boostG1Wrap = document.getElementById('boostG1Wrap');
     const boostG2Wrap = document.getElementById('boostG2Wrap');
 
-    function applyMatchStops(){
-      document.documentElement.style.setProperty('--match-solid', matchColor.value);
-      document.documentElement.style.setProperty('--match-g1', matchG1.value);
-      document.documentElement.style.setProperty('--match-g2', matchG2.value);
-
-      if (matchMode.value === 'solid') matchLabel.classList.add('isSolid');
-      else matchLabel.classList.remove('isSolid');
-    }
-
-    function applyBoostStops(){
-      document.documentElement.style.setProperty('--boost-solid', boostColor.value);
-      document.documentElement.style.setProperty('--boost-g1', boostG1.value);
-      document.documentElement.style.setProperty('--boost-g2', boostG2.value);
-
-      if (boostMode.value === 'solid') boostLabel.classList.add('isSolid');
-      else boostLabel.classList.remove('isSolid');
-    }
-
     function toggleModeUI(){
       const mm = matchMode.value;
       matchSolidWrap.style.display = (mm === 'solid') ? 'flex' : 'none';
@@ -769,10 +692,152 @@
       document.documentElement.style.setProperty('--boost-mode', bm);
     }
 
+    /* ===============================
+       CANVAS TITLES (Preview + Export OK)
+       =============================== */
+
+    function renderTitleToImg(imgEl, {
+      text,
+      fontFamily,
+      fontWeight = 1000,
+      fontSize = 56,
+      letterSpacing = 2,
+      mode = 'gradient',   // 'solid' | 'gradient'
+      solid = '#ffffff',
+      g1 = '#ffffff',
+      g2 = '#000000',
+      stroke = 'rgba(0,0,0,.35)',
+      strokeWidth = 6,
+      shadow = { x: 0, y: 6, blur: 10, color: 'rgba(0,0,0,.35)' },
+      padX = 24,
+      padY = 20
+    }){
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const dpr = Math.max(2, window.devicePixelRatio || 2);
+
+      const fontCss = `${fontWeight} ${fontSize}px ${fontFamily}`;
+      ctx.font = fontCss;
+
+      const baseW = ctx.measureText(text).width;
+      const extra = Math.max(0, (text.length - 1) * letterSpacing);
+      const textW = baseW + extra;
+      const textH = fontSize * 1.25;
+
+      const w = Math.ceil((textW + padX * 2) * dpr);
+      const h = Math.ceil((textH + padY * 2) * dpr);
+
+      canvas.width = w;
+      canvas.height = h;
+
+      ctx.scale(dpr, dpr);
+
+      ctx.font = fontCss;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const cx = (textW + padX * 2) / 2;
+      const cy = (textH + padY * 2) / 2;
+
+      // Fill style
+      let fillStyle = solid;
+      if (mode === 'gradient'){
+        const grad = ctx.createLinearGradient(cx - textW/2, 0, cx + textW/2, 0);
+        grad.addColorStop(0, g1);
+        grad.addColorStop(1, g2);
+        fillStyle = grad;
+      }
+
+      // Stroke settings
+      ctx.lineJoin = 'round';
+      ctx.miterLimit = 2;
+      ctx.lineWidth = strokeWidth;
+      ctx.strokeStyle = stroke;
+
+      // Draw with letterSpacing manually
+      const chars = [...text];
+      const totalCharW = textW;
+      let x = cx - totalCharW / 2;
+
+      // Stroke pass (no shadow)
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = 'rgba(0,0,0,0)';
+
+      for (let i=0;i<chars.length;i++){
+        const ch = chars[i];
+        const chW = ctx.measureText(ch).width;
+        const mid = x + chW/2;
+        ctx.strokeText(ch, mid, cy);
+        x += chW + letterSpacing;
+      }
+
+      // Fill pass (with shadow)
+      x = cx - totalCharW / 2;
+      if (shadow){
+        ctx.shadowOffsetX = shadow.x || 0;
+        ctx.shadowOffsetY = shadow.y || 0;
+        ctx.shadowBlur = shadow.blur || 0;
+        ctx.shadowColor = shadow.color || 'rgba(0,0,0,.35)';
+      }
+      ctx.fillStyle = fillStyle;
+
+      for (let i=0;i<chars.length;i++){
+        const ch = chars[i];
+        const chW = ctx.measureText(ch).width;
+        const mid = x + chW/2;
+        ctx.fillText(ch, mid, cy);
+        x += chW + letterSpacing;
+      }
+
+      imgEl.src = canvas.toDataURL('image/png');
+    }
+
+    function getPosterFontFamily(){
+      // on prend la variable CSS (stack)
+      const ff = getComputedStyle(document.documentElement).getPropertyValue('--poster-font').trim();
+      return ff || 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif';
+    }
+
+    function renderTitles(){
+      const fontFamily = getPosterFontFamily();
+
+      // MATCH OFF (lettres + contour)
+      renderTitleToImg(matchImg, {
+        text: 'MATCH OFF',
+        fontFamily,
+        fontSize: 64,
+        letterSpacing: 2,
+        mode: matchMode.value,
+        solid: matchColor.value,
+        g1: matchG1.value,
+        g2: matchG2.value,
+        strokeWidth: 8,
+        padX: 28,
+        padY: 20
+      });
+
+      // BOOST
+      const txt = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
+      renderTitleToImg(boostImg, {
+        text: txt,
+        fontFamily,
+        fontSize: 40,
+        letterSpacing: 2,
+        mode: boostMode.value,
+        solid: boostColor.value,
+        g1: boostG1.value,
+        g2: boostG2.value,
+        strokeWidth: 6,
+        padX: 24,
+        padY: 18,
+        shadow: { x: 0, y: 5, blur: 10, color: 'rgba(0,0,0,.40)' }
+      });
+    }
+
     function applyAllStyles(){
       toggleModeUI();
-      applyMatchStops();
-      applyBoostStops();
+      renderTitles();
     }
 
     // Text fields
@@ -838,129 +903,36 @@
       }));
     }
 
-    /* ===============================
-       EXPORT FIX: swap titles => SVG
-       =============================== */
-    function measureTextWidthPx(text, fontCss, letterSpacingPx = 0){
-      const c = document.createElement('canvas');
-      const ctx = c.getContext('2d');
-      ctx.font = fontCss;
-      const base = ctx.measureText(text).width;
-      const extra = Math.max(0, (text.length - 1) * (letterSpacingPx || 0));
-      return base + extra;
-    }
-
-    function svgTextMarkup({ text, fontFamily, fontWeight, fontSize, letterSpacing, g1, g2, solid, mode, strokeWidth, idPrefix }) {
-      const fontCss = `${fontWeight} ${fontSize}px ${fontFamily}`;
-      const w = Math.ceil(measureTextWidthPx(text, fontCss, letterSpacing) + 20);
-      const h = Math.ceil(fontSize * 1.7);
-      const fill = (mode === 'solid') ? solid : `url(#${idPrefix}Grad)`;
-
-      return `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-          <defs>
-            <linearGradient id="${idPrefix}Grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="${g1}"></stop>
-              <stop offset="100%" stop-color="${g2}"></stop>
-            </linearGradient>
-          </defs>
-          <text x="50%" y="50%"
-            dominant-baseline="middle" text-anchor="middle"
-            font-family="${fontFamily}" font-weight="${fontWeight}"
-            font-size="${fontSize}"
-            letter-spacing="${letterSpacing}"
-            fill="${fill}"
-            stroke="rgba(0,0,0,.35)"
-            stroke-width="${strokeWidth}"
-            paint-order="stroke">
-            ${text}
-          </text>
-        </svg>
-      `.trim();
-    }
-
-    async function withExportSafeTitles(doWork){
-      const matchBox = document.getElementById('matchOffPreview');
-      const boostBox = document.getElementById('boostPreview');
-
-      const origMatch = matchBox.innerHTML;
-      const origBoost = boostBox.innerHTML;
-
-      const mm = matchMode.value;
-      const mc = matchColor.value;
-      const mg1 = matchG1.value;
-      const mg2 = matchG2.value;
-
-      const bm = boostMode.value;
-      const bc = boostColor.value;
-      const bg1 = boostG1.value;
-      const bg2 = boostG2.value;
-
-      const fontFamily = getComputedStyle(document.documentElement).getPropertyValue('--poster-font').trim() || 'system-ui';
-      const fontWeight = 1000;
-
-      const boostTxt = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
-
-      matchBox.innerHTML = svgTextMarkup({
-        text: 'MATCH OFF',
-        fontFamily, fontWeight,
-        fontSize: 52,
-        letterSpacing: 2,
-        g1: mg1, g2: mg2,
-        solid: mc,
-        mode: mm,
-        strokeWidth: 3,
-        idPrefix: 'm'
-      });
-
-      boostBox.innerHTML = svgTextMarkup({
-        text: boostTxt,
-        fontFamily, fontWeight,
-        fontSize: 30,
-        letterSpacing: 2,
-        g1: bg1, g2: bg2,
-        solid: bc,
-        mode: bm,
-        strokeWidth: 2.5,
-        idPrefix: 'b'
-      });
-
-      try{
-        await doWork();
-      } finally {
-        matchBox.innerHTML = origMatch;
-        boostBox.innerHTML = origBoost;
-      }
-    }
-
     async function exportPNG(){
       const phoneEl = document.getElementById("phone");
 
-      await withExportSafeTitles(async () => {
-        if (document.fonts && document.fonts.ready) await document.fonts.ready;
-        await waitForImages(phoneEl);
+      // Re-render titles just before export (safe)
+      renderTitles();
 
-        const rect = phoneEl.getBoundingClientRect();
-        const scale = Math.max(2, window.devicePixelRatio || 2);
+      // Fonts + images
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      await waitForImages(phoneEl);
 
-        const shot = await html2canvas(phoneEl, {
-          backgroundColor: null,
-          useCORS: true,
-          scale,
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-          windowWidth: document.documentElement.clientWidth,
-          windowHeight: document.documentElement.clientHeight,
-        });
+      const rect = phoneEl.getBoundingClientRect();
+      const scale = Math.max(2, window.devicePixelRatio || 2);
 
-        const dataURL = shot.toDataURL("image/png");
-        const a = document.createElement("a");
-        a.href = dataURL;
-        a.download = "affiche.png";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+      const shot = await html2canvas(phoneEl, {
+        backgroundColor: null,
+        useCORS: true,
+        scale,
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        windowWidth: document.documentElement.clientWidth,
+        windowHeight: document.documentElement.clientHeight,
       });
+
+      const dataURL = shot.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "affiche.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     }
 
     downloadBtn.addEventListener('click', () => {
@@ -997,6 +969,7 @@
 
     function restoreAll(){
       try{
+        // Font
         const savedFont = localStorage.getItem('posterFont');
         const savedGoogle = localStorage.getItem('posterFontGoogle');
         if (savedFont){
@@ -1012,6 +985,7 @@
           applyFontFromSelect();
         }
 
+        // Modes + couleurs
         const mm = localStorage.getItem('matchMode'); if (mm) matchMode.value = mm;
         const mc = localStorage.getItem('matchColor'); if (mc) matchColor.value = mc;
         const mg1 = localStorage.getItem('matchG1'); if (mg1) matchG1.value = mg1;
@@ -1023,24 +997,31 @@
         const bg2 = localStorage.getItem('boostG2'); if (bg2) boostG2.value = bg2;
 
         boostOn = localStorage.getItem('boostOn') === '1';
-        window.boostOn = boostOn;
 
+        // Texte
         const sh1 = localStorage.getItem('h1'); if (sh1) h1.value = sh1;
         const sh2 = localStorage.getItem('h2'); if (sh2) h2.value = sh2;
         const sd = localStorage.getItem('date'); if (sd) date.value = sd;
 
         refreshText();
-        refreshBoostText();
+        refreshBoostButton();
         applyAllStyles();
       }catch(e){
         applyFontFromSelect();
         refreshText();
-        refreshBoostText();
+        refreshBoostButton();
         applyAllStyles();
       }
     }
 
-    fontSelect.addEventListener('change', () => { applyFontFromSelect(); saveAll(); });
+    // Listeners
+    fontSelect.addEventListener('change', async () => {
+      applyFontFromSelect();
+      // attendre que la font Google soit dispo (sinon canvas rendu avec fallback)
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      renderTitles();
+      saveAll();
+    });
 
     matchMode.addEventListener('change', () => { applyAllStyles(); saveAll(); });
     matchColor.addEventListener('input', () => { applyAllStyles(); saveAll(); });
@@ -1056,7 +1037,7 @@
     restoreAll();
 
     // Reset
-    resetBtn.addEventListener('click', () => {
+    resetBtn.addEventListener('click', async () => {
       bgDiv.style.backgroundImage = '';
       delete bgDiv.dataset.src;
 
@@ -1075,8 +1056,7 @@
       refreshText();
 
       boostOn = false;
-      window.boostOn = boostOn;
-      refreshBoostText();
+      refreshBoostButton();
 
       fontSelect.selectedIndex = 0;
       applyFontFromSelect();
@@ -1091,6 +1071,7 @@
       boostG1.value = '#9be8ff';
       boostG2.value = '#2a74ff';
 
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
       applyAllStyles();
 
       try{
@@ -1100,5 +1081,6 @@
   </script>
 </body>
 </html>
+
 
 
