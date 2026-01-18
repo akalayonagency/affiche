@@ -249,6 +249,7 @@
     canvas{ display:none; }
   </style>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <body>
 
@@ -577,44 +578,26 @@
 
     ctx.restore(); // end clip
 
-    // Export
-    const dataURL = canvas.toDataURL("image/png");
-    const a = document.createElement("a");
-    a.href = dataURL;
-    a.download = "affiche.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
+  async function exportPNG(){
+  const phoneEl = document.getElementById("phone");
 
-  downloadBtn.addEventListener('click', () => {
-    exportPNG().catch(err => {
-      console.error(err);
-      alert("Erreur lors de l'export. Vérifie que agency.png est bien dans le repo et que tes images sont valides.");
-    });
+  // Capture EXACTE du rendu HTML/CSS
+  const shot = await html2canvas(phoneEl, {
+    backgroundColor: null,   // garde la transparence autour si besoin
+    scale: 4,                // augmente la qualité (2 à 4 selon perf)
+    useCORS: true            // pour charger agency.png et images
   });
 
-  resetBtn.addEventListener('click', () => {
-    bgDiv.style.backgroundImage = '';
-    delete bgDiv.dataset.src;
+  // Téléchargement direct du screenshot (même rendu que le site)
+  const dataURL = shot.toDataURL("image/png");
+  const a = document.createElement("a");
+  a.href = dataURL;
+  a.download = "affiche.png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
 
-    a1Img.src = '';
-    a1Img.style.display = 'none';
-    delete a1Img.dataset.src;
-
-    a2Img.src = '';
-    a2Img.style.display = 'none';
-    delete a2Img.dataset.src;
-
-    bgInput.value = '';
-    a1Input.value = '';
-    a2Input.value = '';
-
-    h1.value = '@créa 1';
-    h2.value = '@créa 2;
-    date.value = 'Date';
-    refreshText();
-  });
 </script>
 </body>
 </html>
