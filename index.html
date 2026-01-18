@@ -315,6 +315,44 @@
       line-height:1.35;
       text-shadow: 0 2px 10px rgba(0,0,0,.35);
     }
+    .chatgptBox{
+  margin-top:14px;
+}
+
+.chatgptBtn{
+  display:block;
+  text-align:center;
+  padding:12px 14px;
+  border-radius:14px;
+  text-decoration:none;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#fff;
+
+  background: linear-gradient(
+    180deg,
+    rgba(32,156,238,.95),
+    rgba(26,92,210,.95)
+  );
+
+  border:1px solid rgba(255,255,255,.25);
+  box-shadow: 0 14px 30px rgba(0,0,0,.35);
+  backdrop-filter: blur(2px);
+}
+
+.chatgptBtn span{
+  display:block;
+  margin-top:4px;
+  font-size:12px;
+  font-weight:600;
+  opacity:.9;
+}
+
+.chatgptBtn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 18px 38px rgba(0,0,0,.45);
+}
+
   </style>
 </head>
 
@@ -359,6 +397,17 @@
       <button id="downloadBtn">Télécharger en PNG</button>
       <button id="resetBtn" class="secondary">Réinitialiser</button>
     </div>
+<div class="chatgptBox">
+  <a 
+    href="https://chatgpt.com" 
+    target="_blank" 
+    rel="noopener"
+    class="chatgptBtn"
+  >
+    🎨 Générer une image de fond avec ChatGPT<br>
+    <span>Crée ton visuel puis importe-le ici</span>
+  </a>
+</div>
 
 
   </div>
