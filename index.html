@@ -352,6 +352,59 @@
   transform: translateY(-1px);
   box-shadow: 0 18px 38px rgba(0,0,0,.45);
 }
+/* ===== BOUTONS DORÉS ===== */
+
+button:not(.secondary),
+.chatgptBtn{
+  background:
+    linear-gradient(
+      180deg,
+      #f7e08c 0%,
+      #e6c45a 35%,
+      #cfa233 65%,
+      #b6891e 100%
+    );
+  color:#1a1400;
+  font-weight:1000;
+  letter-spacing:.3px;
+
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.65);
+
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.4);
+}
+
+/* Hover = effet métal vivant */
+button:not(.secondary):hover,
+.chatgptBtn:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow:
+    0 16px 36px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.7);
+}
+
+/* Active */
+button:not(.secondary):active,
+.chatgptBtn:active{
+  transform: translateY(0);
+  filter: brightness(.95);
+}
+
+/* Texte secondaire du bouton ChatGPT */
+.chatgptBtn span{
+  color:#3a2b00;
+  opacity:.85;
+}
+
+/* Bouton reset reste sobre */
+button.secondary{
+  background: rgba(0,0,0,.28);
+  color:#fff;
+}
 
   </style>
 </head>
