@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Générateur d'affiche</title>
+  <style>
+    :root{
+      --phone-w: 360px;
+      --phone-h: 640px;
+    }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background:#0f1115;
+      color:#e8e8e8;
+      display:flex;
+      gap:24px;
+      padding:24px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+      justify-content:center;
+    }
+    .panel{
+      width:min(520px, 95vw);
+      background:#151925;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    }
+    .panel h1{
+      font-size:18px;
+      margin:0 0 12px;
+      font-weight:700;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    label{
+      font-size:12px;
+      opacity:.9;
+    }
+    input[type="text"], input[type="file"]{
+      width:100%;
+      box-sizing:border-box;
+      padding:10px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#0f1320;
+      color:#fff;
+      outline:none;
+    }
+    input[type="file"]{
+      padding:8px;
+    }
+    .btns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    button{
+      cursor:pointer;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:#1f6feb;
+      color:white;
+      font-weight:700;
+    }
+    button.secondary{
+      background:#20263a;
+    }
+    button:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+    }
+
+    /* Preview "téléphone" */
+    .previewWrap{
+      width: min(420px, 95vw);
+      display:flex;
+      justify-content:center;
+    }
+    .phone{
+      width: var(--phone-w);
+      height: var(--phone-h);
+      background:#ffffff;
+      border-radius:34px;
+      position:relative;
+      overflow:hidden;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      border: 10px solid rgba(255,255,255,.06);
+      transform: translateZ(0);
+    }
+    .bg{
+      position:absolute;
+      inset:0;
+      background:#fff;
+      background-size:cover;
+      background-position:center;
+    }
+    .topBar{
+      position:absolute;
+      left:18px;
+      right:18px;
+      top:18px;
+      display:flex;
+      justify-content:center;
+      pointer-events:none;
+    }
+    .dateText{
+      background: rgba(0,0,0,.55);
+      color:#fff;
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:16px;
+      letter-spacing:.2px;
+      text-shadow: 0 2px 10px rgba(0,0,0,.5);
+      max-width:100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .bottomRow{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:26px;
+      display:flex;
+      justify-content:space-around;
+      align-items:flex-end;
+      padding:0 18px;
+      gap:14px;
+    }
+    .creator{
+      width: 140px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+    }
+    .handle{
+      background: rgba(0,0,0,.55);
+      color:#fff;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:14px;
+      max-width:140px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      text-shadow: 0 2px 10px rgba(0,0,0,.5);
+    }
+    .avatar{
+      width:92px;
+      height:92px;
+      border-radius:50%;
+      background: rgba(0,0,0,.15);
+      border: 4px solid rgba(255,255,255,.92);
+      box-shadow: 0 10px 22px rgba(0,0,0,.35);
+      overflow:hidden;
+      position:relative;
+      flex: 0 0 auto;
+    }
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .hint{
+      font-size:12px;
+      opacity:.85;
+      margin-top:8px;
+      line-height:1.35;
+    }
+
+    /* Canvas export (caché) */
+    canvas{ display:none; }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+    <h1>Générateur d’affiche (fond + 2 créateurs)</h1>
+
+    <div class="field" style="margin-bottom:12px;">
+      <label>Image de fond (remplit le rectangle)</label>
+      <input id="bgInput" type="file" accept="image/*" />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Avatar créateur 1</label>
+        <input id="a1Input" type="file" accept="image/*" />
+      </div>
+      <div class="field">
+        <label>Avatar créateur 2</label>
+        <input id="a2Input" type="file" accept="image/*" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>@ créateur 1</label>
+        <input id="h1" type="text" placeholder="@Alexandra" value="@Alexandra" />
+      </div>
+      <div class="field">
+        <label>@ créateur 2</label>
+        <input id="h2" type="text" placeholder="@DK" value="@DK" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Date (en haut)</label>
+      <input id="date" type="text" placeholder="Le 26 Décembre à 21h30" value="Le 26 Décembre à 21h30" />
+    </div>
+
+    <div class="btns">
+      <button id="downloadBtn">Télécharger en PNG</button>
+      <button id="resetBtn" class="secondary">Réinitialiser</button>
+    </div>
+
+    <div class="hint">
+      Astuce : mets une image de fond en bonne résolution (1080x1920 idéal).
+      Les avatars seront automatiquement recadrés en rond.
+    </div>
+  </div>
+
+  <div class="previewWrap">
+    <div class="phone" id="phone">
+      <div class="bg" id="bg"></div>
+
+      <div class="topBar">
+        <div class="dateText" id="datePreview">Le 26 Décembre à 21h30</div>
+      </div>
+
+      <div class="bottomRow">
+        <div class="creator">
+          <div class="handle" id="h1Preview">@Alexandra</div>
+          <div class="avatar" id="a1Preview">
+            <img id="a1Img" alt="" style="display:none;">
+          </div>
+        </div>
+
+        <div class="creator">
+          <div class="handle" id="h2Preview">@DK</div>
+          <div class="avatar" id="a2Preview">
+            <img id="a2Img" alt="" style="display:none;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="exportCanvas" width="1080" height="1920"></canvas>
+
+<script>
+  const bgInput = document.getElementById('bgInput');
+  const a1Input = document.getElementById('a1Input');
+  const a2Input = document.getElementById('a2Input');
+
+  const bgDiv = document.getElementById('bg');
+  const a1Img = document.getElementById('a1Img');
+  const a2Img = document.getElementById('a2Img');
+
+  const h1 = document.getElementById('h1');
+  const h2 = document.getElementById('h2');
+  const date = document.getElementById('date');
+
+  const h1Preview = document.getElementById('h1Preview');
+  const h2Preview = document.getElementById('h2Preview');
+  const datePreview = document.getElementById('datePreview');
+
+  const downloadBtn = document.getElementById('downloadBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const canvas = document.getElementById('exportCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Helpers
+  function fileToDataURL(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function clampText(str, maxLen){
+    str = (str || '').trim();
+    if (!str) return '';
+    return str.length > maxLen ? str.slice(0, maxLen - 1) + '…' : str;
+  }
+
+  // Live text bindings
+  function refreshText(){
+    h1Preview.textContent = clampText(h1.value || '', 18) || '@createur1';
+    h2Preview.textContent = clampText(h2.value || '', 18) || '@createur2';
+    datePreview.textContent = clampText(date.value || '', 40) || 'Date';
+  }
+  [h1, h2, date].forEach(el => el.addEventListener('input', refreshText));
+  refreshText();
+
+  // Image inputs -> preview
+  bgInput.addEventListener('change', async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const url = await fileToDataURL(f);
+    bgDiv.style.backgroundImage = `url("${url}")`;
+    bgDiv.dataset.src = url;
+  });
+
+  a1Input.addEventListener('change', async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const url = await fileToDataURL(f);
+    a1Img.src = url;
+    a1Img.style.display = 'block';
+    a1Img.dataset.src = url;
+  });
+
+  a2Input.addEventListener('change', async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const url = await fileToDataURL(f);
+    a2Img.src = url;
+    a2Img.style.display = 'block';
+    a2Img.dataset.src = url;
+  });
+
+  // Draw utilities for export
+  function roundRect(ctx, x, y, w, h, r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr, y);
+    ctx.arcTo(x+w, y, x+w, y+h, rr);
+    ctx.arcTo(x+w, y+h, x, y+h, rr);
+    ctx.arcTo(x, y+h, x, y, rr);
+    ctx.arcTo(x, y, x+w, y, rr);
+    ctx.closePath();
+  }
+
+  async function loadImage(src){
+    if (!src) return null;
+    return new Promise((resolve, reject) => {
+      const im = new Image();
+      im.onload = () => resolve(im);
+      im.onerror = reject;
+      im.crossOrigin = "anonymous";
+      im.src = src;
+    });
+  }
+
+  function drawCover(ctx, img, x, y, w, h){
+    // cover like CSS background-size: cover
+    const iw = img.width, ih = img.height;
+    const ir = iw / ih;
+    const r = w / h;
+    let sw, sh, sx, sy;
+    if (ir > r){
+      sh = ih;
+      sw = sh * r;
+      sx = (iw - sw) / 2;
+      sy = 0;
+    } else {
+      sw = iw;
+      sh = sw / r;
+      sx = 0;
+      sy = (ih - sh) / 2;
+    }
+    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+  }
+
+  function drawPillText(ctx, text, centerX, y, fontPx){
+    const padX = Math.round(fontPx * 0.85);
+    const padY = Math.round(fontPx * 0.55);
+    ctx.font = `800 ${fontPx}px system-ui, -apple-system, Segoe UI, Roboto, Arial`;
+    const metrics = ctx.measureText(text);
+    const tw = metrics.width;
+    const th = fontPx; // approx
+    const w = tw + padX * 2;
+    const h = th + padY * 2;
+    const x = centerX - w/2;
+
+    // background
+    ctx.save();
+    ctx.globalAlpha = 0.58;
+    ctx.fillStyle = "#000";
+    roundRect(ctx, x, y, w, h, h/2);
+    ctx.fill();
+    ctx.restore();
+
+    // text
+    ctx.fillStyle = "#fff";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, x + padX, y + h/2);
+  }
+
+  function drawAvatar(ctx, img, cx, cy, radius){
+    // outer white ring
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + 10, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.fill();
+    ctx.restore();
+
+    // clip circle and draw image cover
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+
+    // cover inside circle
+    const d = radius * 2;
+    // draw cover into bounding square then clip circle => ok
+    drawCover(ctx, img, cx - radius, cy - radius, d, d);
+    ctx.restore();
+
+    // subtle shadow ring
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + 10, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(0,0,0,0.15)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  async function exportPNG(){
+    // Canvas export size: 1080x1920 (story format)
+    const W = canvas.width, H = canvas.height;
+
+    // phone area inside canvas
+    const phoneW = 900;
+    const phoneH = 1600;
+    const phoneX = (W - phoneW) / 2;
+    const phoneY = (H - phoneH) / 2;
+    const radius = 80;
+
+    // background behind phone
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#0f1115";
+    ctx.fillRect(0,0,W,H);
+
+    // phone white frame
+    ctx.save();
+    ctx.shadowColor = "rgba(0,0,0,0.55)";
+    ctx.shadowBlur = 40;
+    ctx.shadowOffsetY = 18;
+
+    ctx.fillStyle = "#fff";
+    roundRect(ctx, phoneX, phoneY, phoneW, phoneH, radius);
+    ctx.fill();
+    ctx.restore();
+
+    // clip to phone
+    ctx.save();
+    roundRect(ctx, phoneX, phoneY, phoneW, phoneH, radius);
+    ctx.clip();
+
+    // draw background image or plain white
+    const bgSrc = bgDiv.dataset.src;
+    if (bgSrc){
+      const bgImg = await loadImage(bgSrc);
+      drawCover(ctx, bgImg, phoneX, phoneY, phoneW, phoneH);
+    } else {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(phoneX, phoneY, phoneW, phoneH);
+    }
+
+    // date pill (top)
+    const dateText = clampText(date.value, 40) || "Date";
+    drawPillText(ctx, dateText, phoneX + phoneW/2, phoneY + 60, 44);
+
+    // handles + avatars (bottom)
+    const yBase = phoneY + phoneH - 240;
+    const leftCx = phoneX + phoneW * 0.28;
+    const rightCx = phoneX + phoneW * 0.72;
+
+    const h1Text = clampText(h1.value, 18) || "@createur1";
+    const h2Text = clampText(h2.value, 18) || "@createur2";
+
+    drawPillText(ctx, h1Text, leftCx, yBase - 150, 40);
+    drawPillText(ctx, h2Text, rightCx, yBase - 150, 40);
+
+    // avatars (if missing, draw placeholder circle)
+    const a1Src = a1Img.dataset.src;
+    const a2Src = a2Img.dataset.src;
+
+    const avatarR = 92;
+
+    if (a1Src){
+      const im1 = await loadImage(a1Src);
+      drawAvatar(ctx, im1, leftCx, yBase, avatarR);
+    } else {
+      ctx.fillStyle = "rgba(0,0,0,0.12)";
+      ctx.beginPath(); ctx.arc(leftCx, yBase, avatarR, 0, Math.PI*2); ctx.fill();
+    }
+
+    if (a2Src){
+      const im2 = await loadImage(a2Src);
+      drawAvatar(ctx, im2, rightCx, yBase, avatarR);
+    } else {
+      ctx.fillStyle = "rgba(0,0,0,0.12)";
+      ctx.beginPath(); ctx.arc(rightCx, yBase, avatarR, 0, Math.PI*2); ctx.fill();
+    }
+
+    // unclip
+    ctx.restore();
+
+    // Export
+    const dataURL = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = dataURL;
+    a.download = "affiche.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  downloadBtn.addEventListener('click', () => {
+    exportPNG().catch(err => {
+      console.error(err);
+      alert("Erreur lors de l'export. Vérifie tes images.");
+    });
+  });
+
+  resetBtn.addEventListener('click', () => {
+    bgDiv.style.backgroundImage = '';
+    delete bgDiv.dataset.src;
+
+    a1Img.src = '';
+    a1Img.style.display = 'none';
+    delete a1Img.dataset.src;
+
+    a2Img.src = '';
+    a2Img.style.display = 'none';
+    delete a2Img.dataset.src;
+
+    bgInput.value = '';
+    a1Input.value = '';
+    a2Input.value = '';
+
+    h1.value = '@Alexandra';
+    h2.value = '@DK';
+    date.value = 'Le 26 Décembre à 21h30';
+    refreshText();
+  });
+</script>
+</body>
+</html>
