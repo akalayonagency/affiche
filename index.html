@@ -177,10 +177,14 @@
       pointer-events:none;
     }
 
-    /* Pills */
+    /* ==========================
+       PILLS (FIX largeur)
+       -> Avant: width:100% (prenait tout l'écran)
+       -> Maintenant: largeur "normale" centrée
+       ========================== */
+
     .matchOff{
-      width:100%;
-      max-width:100%;
+      width: min(320px, 100%);
       font-weight:1000;
       font-size:26px;
       letter-spacing:2px;
@@ -201,11 +205,11 @@
       align-items:center;
       justify-content:center;
       height:56px;
+      margin: 0 auto;
     }
 
     .boostLine{
-      width:100%;
-      max-width:100%;
+      width: min(260px, 100%);
       font-weight:1000;
       font-size:14px;
       letter-spacing:2px;
@@ -222,9 +226,11 @@
       align-items:center;
       justify-content:center;
       height:40px;
+      margin: 0 auto;
     }
 
-    /* SVG texte (dégradé exportable partout) */
+    /* SVG texte (dégradé exportable partout)
+       -> Le SVG remplit maintenant la "pill" (mais la pill n'est plus full-width) */
     .gradTextSvg{
       width:100%;
       height:100%;
@@ -1019,4 +1025,3 @@
   </script>
 </body>
 </html>
-
