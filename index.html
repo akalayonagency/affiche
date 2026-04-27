@@ -5,26 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Générateur d'affiche</title>
 
-  <!--
-    FICHIERS A METTRE DANS TON REPO (même dossier que index.html) :
-    - index.html (ce fichier)
-    - agency.png (ton logo fixe)
-  -->
-
   <style>
     :root{
       --phone-w: 360px;
       --phone-h: 640px;
-
-      /* Police (modifiable) */
       --poster-font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-
-      /* Etats UI */
-      --match-mode: gradient; /* solid | gradient */
-      --boost-mode: solid;    /* solid | gradient */
+      --match-mode: gradient;
+      --boost-mode: solid;
     }
 
-    /* Page TRANSPARENTE (pour embed Odoo) */
     html, body{
       margin:0;
       padding:0;
@@ -42,7 +31,6 @@
       justify-content:center;
     }
 
-    /* Panneau gauche transparent */
     .panel{
       width:min(520px, 95vw);
       background: rgba(0,0,0,.10);
@@ -80,7 +68,7 @@
       text-shadow: 0 2px 10px rgba(0,0,0,.35);
     }
 
-    input[type="text"], input[type="file"], select, input[type="color"]{
+    input[type="text"], input[type="file"], select, input[type="color"], input[type="number"]{
       width:100%;
       box-sizing:border-box;
       padding:10px 10px;
@@ -120,7 +108,6 @@
       color:#fff;
     }
 
-    /* Preview */
     .previewWrap{
       width: min(420px, 95vw);
       display:flex;
@@ -150,7 +137,6 @@
       z-index:0;
     }
 
-    /* Vignette */
     .fightVignette{
       position:absolute;
       inset:0;
@@ -164,7 +150,6 @@
       pointer-events:none;
     }
 
-    /* Header */
     .topStack{
       position:absolute;
       left:18px;
@@ -178,7 +163,6 @@
       pointer-events:none;
     }
 
-    /* Pills */
     .matchOff{
       width: fit-content;
       max-width: 100%;
@@ -210,13 +194,13 @@
       justify-content:center;
     }
 
-    /* ✅ TITRES EN IMAGE (CANVAS) => preview = export = mobile OK */
     #matchImg, #boostImg{
       display:block;
       height:auto;
       max-width:100%;
       image-rendering:auto;
     }
+
     #matchImg{ height: 52px; }
     #boostImg{ height: 34px; }
 
@@ -236,7 +220,6 @@
       white-space:nowrap;
     }
 
-    /* Creators */
     .creatorsLayer{
       position:absolute;
       left:0;
@@ -259,7 +242,7 @@
       gap:10px;
     }
 
-    .creator.left{  transform: translateY(110px); }
+    .creator.left{ transform: translateY(110px); }
     .creator.right{ transform: translateY(-45px); }
 
     .handle{
@@ -269,8 +252,7 @@
       font-size:14px;
       letter-spacing:.8px;
       text-transform:uppercase;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
       border: 1px solid rgba(255,255,255,.24);
       box-shadow: 0 14px 28px rgba(0,0,0,.35);
       text-shadow:
@@ -304,7 +286,6 @@
       display:block;
     }
 
-    /* Logo */
     .agencyBadge{
       position:absolute;
       right: 34px;
@@ -330,8 +311,7 @@
       z-index:3;
       pointer-events:none;
       opacity:.14;
-      background-image:
-        radial-gradient(rgba(255,255,255,.35) 1px, transparent 1px);
+      background-image: radial-gradient(rgba(255,255,255,.35) 1px, transparent 1px);
       background-size: 6px 6px;
       mix-blend-mode: overlay;
       transform: rotate(8deg);
@@ -363,7 +343,6 @@
       opacity:.9;
     }
 
-    /* BOUTONS DORÉS */
     button:not(.secondary),
     .chatgptBtn{
       background:
@@ -404,7 +383,6 @@
       opacity:.85;
     }
 
-    /* Toggle boost: état ON */
     button.boostToggle.isOn{
       background:
         linear-gradient(
@@ -431,7 +409,7 @@
     <h1>🥊Générateur d’affiche de Match Off🥊</h1>
 
     <div class="field" style="margin-bottom:12px;">
-      <label>Image de fond (remplit le rectangle)</label>
+      <label>Image de fond</label>
       <input id="bgInput" type="file" accept="image/*" />
     </div>
 
@@ -457,26 +435,31 @@
       </div>
     </div>
 
-    <div class="field">
-      <label>Date & heure</label>
-      <input id="date" type="text" placeholder="Date & heure" value="Date & heure" />
+    <div class="row">
+      <div class="field">
+        <label>Date & heure</label>
+        <input id="date" type="text" placeholder="Date & heure" value="Date & heure" />
+      </div>
+
+      <div class="field">
+        <label>Taille date & heure</label>
+        <input id="dateSize" type="number" min="8" max="60" value="16" />
+      </div>
     </div>
 
-    <!-- Police -->
     <div class="field" style="margin-top:12px;">
       <label>Police d’écriture</label>
       <select id="fontSelect">
-        <option value='system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif' selected>Système (par défaut)</option>
+        <option value='system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif' selected>Système</option>
         <option value='Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif'>Impact</option>
         <option value='"Arial Black", Arial, sans-serif'>Arial Black</option>
         <option value='"Trebuchet MS", Trebuchet, Arial, sans-serif'>Trebuchet</option>
-        <option value='"Bebas Neue", system-ui, sans-serif' data-google="Bebas+Neue">Bebas Neue (Google)</option>
-        <option value='"Oswald", system-ui, sans-serif' data-google="Oswald:wght@400;700">Oswald (Google)</option>
-        <option value='"Anton", system-ui, sans-serif' data-google="Anton">Anton (Google)</option>
+        <option value='"Bebas Neue", system-ui, sans-serif' data-google="Bebas+Neue">Bebas Neue</option>
+        <option value='"Oswald", system-ui, sans-serif' data-google="Oswald:wght@400;700">Oswald</option>
+        <option value='"Anton", system-ui, sans-serif' data-google="Anton">Anton</option>
       </select>
     </div>
 
-    <!-- MATCH OFF style -->
     <div class="field" style="margin-top:12px;">
       <label>Style "MATCH OFF"</label>
       <select id="matchMode">
@@ -485,23 +468,22 @@
       </select>
     </div>
 
-    <div class="row" style="margin-top:0;">
+    <div class="row">
       <div class="field" id="matchSolidWrap">
         <label>Couleur unie MATCH OFF</label>
         <input id="matchColor" type="color" value="#ffffff" />
       </div>
       <div class="field" id="matchG2Wrap">
-        <label>Dégradé MATCH OFF (fin)</label>
+        <label>Dégradé MATCH OFF fin</label>
         <input id="matchG2" type="color" value="#b6891e" />
       </div>
     </div>
 
-    <div class="field" id="matchG1Wrap" style="margin-top:-6px;">
-      <label>Dégradé MATCH OFF (début)</label>
+    <div class="field" id="matchG1Wrap">
+      <label>Dégradé MATCH OFF début</label>
       <input id="matchG1" type="color" value="#f7e08c" />
     </div>
 
-    <!-- BOOST style -->
     <div class="field" style="margin-top:12px;">
       <label>Style "BOOST"</label>
       <select id="boostMode">
@@ -510,39 +492,32 @@
       </select>
     </div>
 
-    <div class="row" style="margin-top:0;">
+    <div class="row">
       <div class="field" id="boostSolidWrap">
         <label>Couleur unie BOOST</label>
         <input id="boostColor" type="color" value="#ffffff" />
       </div>
       <div class="field" id="boostG2Wrap" style="display:none;">
-        <label>Dégradé BOOST (fin)</label>
+        <label>Dégradé BOOST fin</label>
         <input id="boostG2" type="color" value="#2a74ff" />
       </div>
     </div>
 
-    <div class="field" id="boostG1Wrap" style="display:none; margin-top:-6px;">
-      <label>Dégradé BOOST (début)</label>
+    <div class="field" id="boostG1Wrap" style="display:none;">
+      <label>Dégradé BOOST début</label>
       <input id="boostG1" type="color" value="#9be8ff" />
     </div>
 
     <div class="btns">
       <button id="downloadBtn">Télécharger en PNG</button>
       <button id="resetBtn" class="secondary">Réinitialiser</button>
-
-      <!-- Toggle boost -->
       <button id="boostBtn" class="secondary boostToggle" aria-pressed="false">
         SANS BOOST : OFF
       </button>
     </div>
 
     <div class="chatgptBox">
-      <a
-        href="https://chatgpt.com"
-        target="_blank"
-        rel="noopener"
-        class="chatgptBtn"
-      >
+      <a href="https://chatgpt.com" target="_blank" rel="noopener" class="chatgptBtn">
         🎨 Générer une image de fond avec ChatGPT<br>
         <span>Crée ton visuel puis importe-le ici</span>
       </a>
@@ -590,7 +565,6 @@
     </div>
   </div>
 
-  <!-- html2canvas -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <script>
@@ -605,6 +579,7 @@
     const h1 = document.getElementById('h1');
     const h2 = document.getElementById('h2');
     const date = document.getElementById('date');
+    const dateSize = document.getElementById('dateSize');
 
     const h1Preview = document.getElementById('h1Preview');
     const h2Preview = document.getElementById('h2Preview');
@@ -613,11 +588,9 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // Titres en image
     const matchImg = document.getElementById('matchImg');
     const boostImg = document.getElementById('boostImg');
 
-    // BOOST toggle
     const boostBtn = document.getElementById('boostBtn');
     let boostOn = false;
 
@@ -634,7 +607,6 @@
       saveAll();
     });
 
-    // Font
     const fontSelect = document.getElementById('fontSelect');
 
     function ensureGoogleFontLoaded(googleValue){
@@ -654,11 +626,9 @@
       const fontStack = opt.value;
       const google = opt.getAttribute('data-google');
       if (google) ensureGoogleFontLoaded(google);
-
       document.documentElement.style.setProperty('--poster-font', fontStack);
     }
 
-    // Styles MATCH/BOOST
     const matchMode = document.getElementById('matchMode');
     const matchColor = document.getElementById('matchColor');
     const matchG1 = document.getElementById('matchG1');
@@ -692,17 +662,13 @@
       document.documentElement.style.setProperty('--boost-mode', bm);
     }
 
-    /* ===============================
-       CANVAS TITLES (Preview + Export OK)
-       =============================== */
-
     function renderTitleToImg(imgEl, {
       text,
       fontFamily,
       fontWeight = 1000,
       fontSize = 56,
       letterSpacing = 2,
-      mode = 'gradient',   // 'solid' | 'gradient'
+      mode = 'gradient',
       solid = '#ffffff',
       g1 = '#ffffff',
       g2 = '#000000',
@@ -714,7 +680,6 @@
     }){
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-
       const dpr = Math.max(2, window.devicePixelRatio || 2);
 
       const fontCss = `${fontWeight} ${fontSize}px ${fontFamily}`;
@@ -725,14 +690,10 @@
       const textW = baseW + extra;
       const textH = fontSize * 1.25;
 
-      const w = Math.ceil((textW + padX * 2) * dpr);
-      const h = Math.ceil((textH + padY * 2) * dpr);
-
-      canvas.width = w;
-      canvas.height = h;
+      canvas.width = Math.ceil((textW + padX * 2) * dpr);
+      canvas.height = Math.ceil((textH + padY * 2) * dpr);
 
       ctx.scale(dpr, dpr);
-
       ctx.font = fontCss;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -740,52 +701,49 @@
       const cx = (textW + padX * 2) / 2;
       const cy = (textH + padY * 2) / 2;
 
-      // Fill style
       let fillStyle = solid;
+
       if (mode === 'gradient'){
-        const grad = ctx.createLinearGradient(cx - textW/2, 0, cx + textW/2, 0);
+        const grad = ctx.createLinearGradient(cx - textW / 2, 0, cx + textW / 2, 0);
         grad.addColorStop(0, g1);
         grad.addColorStop(1, g2);
         fillStyle = grad;
       }
 
-      // Stroke settings
       ctx.lineJoin = 'round';
       ctx.miterLimit = 2;
       ctx.lineWidth = strokeWidth;
       ctx.strokeStyle = stroke;
 
-      // Draw with letterSpacing manually
       const chars = [...text];
-      const totalCharW = textW;
-      let x = cx - totalCharW / 2;
+      let x = cx - textW / 2;
 
-      // Stroke pass (no shadow)
       ctx.shadowBlur = 0;
       ctx.shadowColor = 'rgba(0,0,0,0)';
 
-      for (let i=0;i<chars.length;i++){
+      for (let i = 0; i < chars.length; i++){
         const ch = chars[i];
         const chW = ctx.measureText(ch).width;
-        const mid = x + chW/2;
+        const mid = x + chW / 2;
         ctx.strokeText(ch, mid, cy);
         x += chW + letterSpacing;
       }
 
-      // Fill pass (with shadow)
-      x = cx - totalCharW / 2;
+      x = cx - textW / 2;
+
       if (shadow){
         ctx.shadowOffsetX = shadow.x || 0;
         ctx.shadowOffsetY = shadow.y || 0;
         ctx.shadowBlur = shadow.blur || 0;
         ctx.shadowColor = shadow.color || 'rgba(0,0,0,.35)';
       }
+
       ctx.fillStyle = fillStyle;
 
-      for (let i=0;i<chars.length;i++){
+      for (let i = 0; i < chars.length; i++){
         const ch = chars[i];
         const chW = ctx.measureText(ch).width;
-        const mid = x + chW/2;
+        const mid = x + chW / 2;
         ctx.fillText(ch, mid, cy);
         x += chW + letterSpacing;
       }
@@ -794,7 +752,6 @@
     }
 
     function getPosterFontFamily(){
-      // on prend la variable CSS (stack)
       const ff = getComputedStyle(document.documentElement).getPropertyValue('--poster-font').trim();
       return ff || 'system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif';
     }
@@ -802,7 +759,6 @@
     function renderTitles(){
       const fontFamily = getPosterFontFamily();
 
-      // MATCH OFF (lettres + contour)
       renderTitleToImg(matchImg, {
         text: 'MATCH OFF',
         fontFamily,
@@ -817,8 +773,8 @@
         padY: 20
       });
 
-      // BOOST
       const txt = boostOn ? 'AVEC BOOST' : 'SANS BOOST';
+
       renderTitleToImg(boostImg, {
         text: txt,
         fontFamily,
@@ -840,7 +796,6 @@
       renderTitles();
     }
 
-    // Text fields
     function fileToDataURL(file){
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -860,9 +815,10 @@
       h1Preview.textContent = clampText(h1.value || '', 18) || '@créa 1';
       h2Preview.textContent = clampText(h2.value || '', 18) || '@créa 2';
       datePreview.textContent = clampText(date.value || '', 40) || 'Date';
+      datePreview.style.fontSize = (dateSize.value || 16) + 'px';
     }
 
-    [h1, h2, date].forEach(el => el.addEventListener('input', () => {
+    [h1, h2, date, dateSize].forEach(el => el.addEventListener('input', () => {
       refreshText();
       saveAll();
     }));
@@ -906,10 +862,8 @@
     async function exportPNG(){
       const phoneEl = document.getElementById("phone");
 
-      // Re-render titles just before export (safe)
       renderTitles();
 
-      // Fonts + images
       if (document.fonts && document.fonts.ready) await document.fonts.ready;
       await waitForImages(phoneEl);
 
@@ -942,7 +896,6 @@
       });
     });
 
-    // Save / Restore
     function saveAll(){
       try{
         const opt = fontSelect.options[fontSelect.selectedIndex];
@@ -964,28 +917,29 @@
         localStorage.setItem('h1', h1.value);
         localStorage.setItem('h2', h2.value);
         localStorage.setItem('date', date.value);
+        localStorage.setItem('dateSize', dateSize.value);
       }catch(e){}
     }
 
     function restoreAll(){
       try{
-        // Font
         const savedFont = localStorage.getItem('posterFont');
         const savedGoogle = localStorage.getItem('posterFontGoogle');
+
         if (savedFont){
-          for (let i=0;i<fontSelect.options.length;i++){
+          for (let i = 0; i < fontSelect.options.length; i++){
             if (fontSelect.options[i].value === savedFont){
               fontSelect.selectedIndex = i;
               break;
             }
           }
+
           if (savedGoogle) ensureGoogleFontLoaded(savedGoogle);
           document.documentElement.style.setProperty('--poster-font', savedFont);
         } else {
           applyFontFromSelect();
         }
 
-        // Modes + couleurs
         const mm = localStorage.getItem('matchMode'); if (mm) matchMode.value = mm;
         const mc = localStorage.getItem('matchColor'); if (mc) matchColor.value = mc;
         const mg1 = localStorage.getItem('matchG1'); if (mg1) matchG1.value = mg1;
@@ -998,10 +952,10 @@
 
         boostOn = localStorage.getItem('boostOn') === '1';
 
-        // Texte
         const sh1 = localStorage.getItem('h1'); if (sh1) h1.value = sh1;
         const sh2 = localStorage.getItem('h2'); if (sh2) h2.value = sh2;
         const sd = localStorage.getItem('date'); if (sd) date.value = sd;
+        const ds = localStorage.getItem('dateSize'); if (ds) dateSize.value = ds;
 
         refreshText();
         refreshBoostButton();
@@ -1014,10 +968,8 @@
       }
     }
 
-    // Listeners
     fontSelect.addEventListener('change', async () => {
       applyFontFromSelect();
-      // attendre que la font Google soit dispo (sinon canvas rendu avec fallback)
       if (document.fonts && document.fonts.ready) await document.fonts.ready;
       renderTitles();
       saveAll();
@@ -1033,10 +985,8 @@
     boostG1.addEventListener('input', () => { applyAllStyles(); saveAll(); });
     boostG2.addEventListener('input', () => { applyAllStyles(); saveAll(); });
 
-    // Init
     restoreAll();
 
-    // Reset
     resetBtn.addEventListener('click', async () => {
       bgDiv.style.backgroundImage = '';
       delete bgDiv.dataset.src;
@@ -1053,6 +1003,8 @@
       h1.value = '@créa 1';
       h2.value = '@créa 2';
       date.value = 'Date & Heure';
+      dateSize.value = 16;
+
       refreshText();
 
       boostOn = false;
@@ -1081,6 +1033,3 @@
   </script>
 </body>
 </html>
-
-
-
